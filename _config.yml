@@ -1,0 +1,14 @@
+# Name of your site
+name: Stephenson
+
+# Short description
+description: Jekyll Site Editor
+
+# Your name, as you want it to appear underneath each post and in the footer
+author: Daniel Klco
+
+# The URL of your actual domain. This will be used to make absolute links in the RSS feed.
+url: http://klcodanr.github.com/stevenson/
+
+# Exclude system files
+exclude: [.gitignore]

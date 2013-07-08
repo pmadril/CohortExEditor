@@ -1,0 +1,23 @@
+--- 
+layout: default 
+title: Edit Post
+authRequired: true
+scripts: [js/bootstrap-datepicker.js, js/yaml.js, js/nicEdit.js, js/edit-post.js]
+styles: [css/datepicker.css]
+---
+
+<a href="edit-site.html#_posts" class="cancel">&lt; Back</a>
+<h2>Editing </h2>
+<form id="edit-post">
+	<label for="title">Post Title</label>
+	<input id="title" name="title" type="text" placeholder="Enter the post title..." />
+	<label for="layout">Post Layout</label>
+	<select id="layout" name="layout">
+	</select>
+	<label for="date">Publish Date</label>
+	<input id="date" name="date" type="text" placeholder="Enter the post publish date..." />
+	<label for="content">Post Content</label>
+	<textarea id="content" rows="20" style="width:100%" placeholder="Write your post..."></textarea><br/>
+	<a class="btn info save" data-backdrop="static">Save Changes</a> &nbsp; 
+	<a class="btn info cancel" href="edit-site.html#_posts">Cancel</a>
+</form>

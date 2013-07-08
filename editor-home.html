@@ -1,0 +1,43 @@
+--- 
+layout: default 
+title: Site Editor Home 
+authRequired: true
+scripts: [js/editor-home.js]
+---
+
+<div class="span12">
+	<div id="message-container"></div>
+	<h3>Favorite Repositories</h3>
+</div>
+<ul id="favorite-repos-container" class="thumbnails">
+</ul>
+<div class="span4 well" style="clear:both">
+	<form id="add-repo">
+		<fieldset>
+			<legend>Add Repository</legend>
+			<label for="owner">Owner</label>
+			<input name="owner" type="text" required="required" />
+			<label for="repo">Repository</label>
+			<input name="repo" type="text" required="required" /><br/>
+			<input type="submit" class="btn info save" value="+ Add" />
+		</fieldset>	
+	</form>
+</div>
+<div class="span12" style="clear:both"> 
+	<h3>Your Repositories</h3>
+</div>
+<ul id="your-repos-container" class="thumbnails">
+</ul>
+<div id="branch-modal" class="modal hide">
+	<div class="modal-header">
+		<h3>Select Branch</h3>
+	</div>
+	<div class="modal-body">
+		<p>
+			Current repository: <span id="current-repo"></span>
+		</p>
+		<select id="branches">
+		</select><br/>
+		<a href="#" class="btn">Use Branch &gt;</a>
+	</div>
+</div>

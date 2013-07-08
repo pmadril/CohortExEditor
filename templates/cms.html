@@ -1,0 +1,27 @@
+<script id="repo-item" type="text/html">
+	<li class="span3 well">
+		<a href="{{name}}" class="open">
+			<strong>{{name}}</strong>
+			<br/>
+			<small>{{description}}</small>
+		</a><br/>
+		<a href="{{name}}" class="favorite">favorite</a>
+	</li>
+</script>
+<script id="file" type="text/html">
+	<tr data-path="{{path}}" class="{{type}}">
+		<td>
+			<em class="icon-{{type}}"></em>&nbsp;
+			<input type="checkbox" />
+		</td>
+		<td>
+			{{ name }}
+		</td>
+		<td>
+			{{ size }}
+		</td>
+		<td>
+			{{ sha }}
+		</td>
+	</tr>
+</script>

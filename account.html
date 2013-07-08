@@ -1,0 +1,17 @@
+--- 
+layout: cms 
+title: My Account
+authRequired: true
+scripts: [js/account.js]
+---
+
+<h3>My Account</h3>
+<form id="account">
+	<label for="repo">Site Repository</label>
+	<select name="repo" id="repo">
+	</select>
+	<label for="branch">Site Branch</label>
+	<select name="branch" id="branch">
+	</select><br/>
+	<input type="submit" class="btn info" value="Update Info" />
+</form>

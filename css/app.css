@@ -1,0 +1,21 @@
+body {
+	padding-top: 60px;
+	padding-bottom: 40px;
+}
+
+.folder-close {
+	cursor: pointer
+}
+
+.folder-close input {
+	display: none
+}
+
+.hero-unit img {
+	margin: 10px;
+	border-radius: 10px;
+}
+
+.navbar img {
+	border-radius: 2px;
+}

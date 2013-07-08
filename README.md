@@ -1,3 +1,4 @@
-WYSIWYG blog editor for Jeykll
+stevenson
+=========
 
-Check out the gh-pages branch for more
+WYSIWYG blog and page editor for Jekyll.
