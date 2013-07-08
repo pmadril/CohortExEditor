@@ -96,7 +96,7 @@
 			} else {
 				newContent += $('#content').val();
 			}
-			currentPage.content = newContent;
+			currentPost.content = newContent;
 			
 			Stevenson.repo.savePage({
 				page: currentPost,
