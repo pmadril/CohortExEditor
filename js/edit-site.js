@@ -47,8 +47,8 @@
 	});
 	
 	$(document).ready(function(){
-		$('#file-name-modal .btn').click(function() {
-			$('#file-name-modal .modal-body .alert-error').remove();
+		$('#new-file-modal .btn').click(function() {
+			$('#new-file-modal .modal-body .alert-error').remove();
 			var name = $('#file-name').val();
 			if(name != ''){
 				var path = $('#files').attr('data-path');
@@ -62,8 +62,8 @@
 				$('#file-name-modal .modal-body').prepend('<div class="alert alert-error">Please enter a file name.</div>');
 			}
 		});
-		$('.file-new').click(function(){
-			$('#file-name-modal').modal({
+		$('.new').click(function(){
+			$('#new-file-modal').modal({
 				show: true
 			});
 		});
