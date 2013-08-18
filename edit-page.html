@@ -8,7 +8,7 @@ scripts: [js/yaml.js, js/nicEdit.js, js/edit-page.js]
 <a href="#" class="cancel">&lt; Back</a>
 <h2>Editing </h2>
 <form id="edit-page">
-	<fieldset>
+	<fieldset class="container properties">
 		<legend>Properties</legend>
 		<label for="title">Page Title</label>
 		<input id="title" name="title" type="text" placeholder="Enter the page title..." class="span6" />
@@ -16,15 +16,15 @@ scripts: [js/yaml.js, js/nicEdit.js, js/edit-page.js]
 		<select id="layout" name="layout">
 		</select>
 	</fieldset>
-	<fieldset>
+	<fieldset class="container content">
 		<legend>Page Content</legend>
 		<textarea id="content" rows="20" style="width:100%" placeholder="Write your page..."></textarea><br/>
 	</fieldset>
-	<fieldset>
+	<fieldset class="container controls">
 		<legend>Controls</legend>
 		<label for="message">Commit Message</label>
 		<input id="message" name="message" type="text" placeholder="Enter a commit message..." class="span6" /><br/>
-		<a class="btn info save" data-backdrop="static">Save Changes</a> &nbsp; 
-		<a class="btn info cancel" href="edit-site.html">Cancel</a>
+		<a class="btn btn-success save">Save Changes</a> &nbsp; 
+		<a class="btn cancel" href="edit-site.html">Cancel</a>
 	</fieldset>
 </form>

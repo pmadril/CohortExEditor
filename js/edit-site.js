@@ -67,17 +67,14 @@
 				show: true
 			});
 		});
-		
 		$('.file-edit').click(function(){
 			Stevenson.ui.Loader.display('Loading editor...', 100);
 			var path = $('#files input[type=checkbox]:checked').parents('tr').attr('data-path');
 			var lowerPost = path.toLowerCase();
 			if(lowerPost.indexOf('_post') != -1) {
 				window.location = 'edit-post.html?post=' + path + '&path='+$('#files').attr('data-path');
-			} else if(lowerPost.indexOf('.html') != -1 || lowerPost.indexOf('.md') != -1 || lowerPost.indexOf('.markdown') != -1 || lowerPost.indexOf('.mdtext') != -1 ) {
-				window.location = 'edit-page.html?page=' + path + '&path='+$('#files').attr('data-path');
 			} else {
-				// handle non-Jekyll files here
+				window.location = 'edit-page.html?page=' + path + '&path='+$('#files').attr('data-path');
 			}
 			return false;
 		});

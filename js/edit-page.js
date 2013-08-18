@@ -39,6 +39,8 @@
 					if(properties) {
 						$('#layout').val(properties.layout);
 						$('#title').val(properties.title);
+					} else {
+						$('.container.properties').hide();
 					}
 					
 					Stevenson.log.debug('Setting content');
