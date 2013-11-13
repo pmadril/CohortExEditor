@@ -66,6 +66,7 @@
 			$('#new-file-modal').modal({
 				show: true
 			});
+			return false;
 		});
 		$('.file-edit').click(function(){
 			Stevenson.ui.Loader.display('Loading editor...', 100);
@@ -76,6 +77,33 @@
 			} else {
 				window.location = 'edit-page.html?page=' + path + '&path='+$('#files').attr('data-path');
 			}
+			return false;
+		});
+		$('.file-delete').click(function(){
+			$('#delete-file-modal').modal({
+				show: true
+			});
+			var path = $('#files input[type=checkbox]:checked').parents('tr').attr('data-path');
+			$('#delete-file-modal .yes').click(function(){
+				$('#delete-file-modal').modal('hide');
+				Stevenson.ui.Loader.display('Deleting...', 100);
+				Stevenson.repo.deleteFile({
+					path: path,
+					success: function(path){
+						Stevenson.ui.Messages.displayMessage("Deleted file: "+path);
+						Stevenson.ui.Loader.hide();
+					},
+					error: function(message){
+						Stevenson.ui.Messages.displayError("Failed to delete file: "+path+" due to error "+message);
+						Stevenson.ui.Loader.hide();
+					}
+				});
+				return false;
+			});
+			$('#delete-file-modal .no').click(function(){
+				$('#loading-modal').modal('hide');
+				return false;
+			});
 			return false;
 		});
 	});

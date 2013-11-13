@@ -176,6 +176,23 @@ var Stevenson ={
 	},
 	repo: {
 		layouts: [],
+		deleteFile: function(options){
+			var settings = $.extend({}, {
+				success: function(file){},
+				error: function(err){}
+				}, options);
+			
+			var gh = Stevenson.repo.getGitHub();
+			var repo = gh.getRepo(Stevenson.Account.repo.split('/')[0], Stevenson.Account.repo
+					.split('/')[1]);
+			repo.remove(Stevenson.Account.branch, settings.path, function(err, file) {
+				if (err) {
+					settings.error(Stevenson.repo.getErrorMessage(err));
+				} else {
+					settings.success(settings.path);
+				}
+			});
+		},
 		getAllFiles: function(options){
 			var settings = $.extend({}, {
 				success: function(files){},
@@ -270,10 +287,6 @@ var Stevenson ={
 								Stevenson.log.debug("Adding file: " + rf.path);
 								file.name = name;
 								file.path = rf.path;
-								if(file.name == '_config.yaml' || file.name == '_stevenson.json' || file.name == '_layouts'){
-									Stevenson.log.debug("Skipping config file: " + rf.path);
-									continue;
-								}
 								
 								if(file.name == '') {
 									file.name = '..';
