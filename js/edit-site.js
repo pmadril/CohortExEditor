@@ -48,7 +48,7 @@
 	
 	$(document).ready(function(){
 		$('#file-name-modal .btn').click(function() {
-                        $('#file-name-modal .modal-body .alert-error').remove();
+                        $('#new-file-modal .modal-body .alert-error').remove();
                         var name = $('#file-name').val();
                         if(name != ''){
                                 var path = $('#files').attr('data-path');
