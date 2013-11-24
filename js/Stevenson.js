@@ -420,7 +420,6 @@ var Stevenson ={
 			repo.write(Stevenson.Account.branch, settings.path, settings.page.content, settings.message, function(err) {
 				if (err) {
 					Stevenson.log.debug('Failed to save changes');
-					Stevenson.Account.clear();
 					settings.error(Stevenson.repo.getErrorMessage(err));
 				} else {
 					Stevenson.log.debug('Changes saved successfully');
