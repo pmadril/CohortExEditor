@@ -65,7 +65,7 @@
 			
 			Stevenson.ui.Loader.display('Saving post...', 100);
 			
-			var properties = currentPost.getProperties();
+			var properties = currentPost != null ? currentPost.getProperties() : {};
 			
 			var layout = $('#layout').val();
 			var title = $('#title').val();
