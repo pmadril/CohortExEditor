@@ -47,21 +47,35 @@
 	});
 	
 	$(document).ready(function(){
-		$('#new-file-modal .btn').click(function() {
-			$('#new-file-modal .modal-body .alert-error').remove();
-			var name = $('#file-name').val();
-			if(name != ''){
-				var path = $('#files').attr('data-path');
-				if(path.indexOf('_post') != -1) {
-					window.location = 'edit-post.html?new=true&path='+$('#files').attr('data-path') + '&post=' + name;
-				} else {
-					window.location = 'edit-page.html?new=true&path='+$('#files').attr('data-path') + '&page=' + name;
-				}
-			} else {
-				$('#new-file-name').addClass('error');
-				$('#file-name-modal .modal-body').prepend('<div class="alert alert-error">Please enter a file name.</div>');
-			}
-		});
+		$('#file-name-modal .btn').click(function() {
+                        $('#file-name-modal .modal-body .alert-error').remove();
+                        var name = $('#file-name').val();
+                        if(name != ''){
+                                var path = $('#files').attr('data-path');
+                                Stevenson.repo.savePage({
+                                        path: path+"/"+name,
+                                        page: {
+                                                content:''
+                                        },
+                                        message: 'Creating new page ' + name,
+                                        success: function(){
+                                                if(path.indexOf('_post') != -1) {
+                                                        window.location = 'edit-post.html?new=true&path='+$('#files').attr('data-path') + '&post=' + name;
+                                                } else {
+                                                        window.location = 'edit-page.html?new=true&path='+$('#files').attr('data-path') + '&page=' + name;
+                                                }        
+                                        },
+                                        error: function(msg){
+                                                $('#new-file-name').addClass('error');
+                                                $('#file-name-modal .modal-body').prepend('<div class="alert alert-error">Error creating page: '+msg+'.</div>');
+                                        }
+                                });
+
+                        } else {
+                                $('#new-file-name').addClass('error');
+                                $('#file-name-modal .modal-body').prepend('<div class="alert alert-error">Please enter a file name.</div>');
+                        }
+                });
 		$('.new').click(function(){
 			$('#new-file-modal').modal({
 				show: true
