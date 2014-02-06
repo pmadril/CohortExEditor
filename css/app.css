@@ -19,3 +19,7 @@ body {
 .navbar img {
 	border-radius: 2px;
 }
+
+#your-repos-container li, #favorite-repos-container li {
+	list-style: none;
+}
