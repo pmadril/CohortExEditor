@@ -534,8 +534,8 @@
               if (ref.type === "tree") delete ref.sha;
             });
 
-            that.postTree(newTree, function(err, rootTree) {
-              that.commit(latestCommit, rootTree, 'Deleted '+path , function(err, commit) {
+            that.postTree(newTree, function(err, newTree) {
+              that.commit(latestCommit, newTree, 'Deleted '+path , function(err, commit) {
                 that.updateHead(branch, commit, function(err) {
                   cb(err);
                 });

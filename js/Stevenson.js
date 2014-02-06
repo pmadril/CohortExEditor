@@ -433,6 +433,145 @@ var Stevenson ={
 	 */
 	ui: {
 		/**
+		 * Handles the the display and updating of the properties.
+		 */
+		Editor : {
+			load : function(config, properties) {
+				$('.properties > legend').html(config.title);
+				$('.properties > p').html(config.description);
+				$.each(config.fields, function(idx, field){
+					if(Stevenson.ui.Editor.types[field.type]) {
+						Stevenson.log.debug('Loading field '+field.name+' of type '+ field.type);
+						$('.properties .fields').append('<div class="control-group" id="field-'+idx+'"></div>');
+						var container = $('#field-'+idx);
+						Stevenson.ui.Editor.types[field.type].load(container, field, properties[field.name]);
+					} else {
+						Stevenson.ui.Messages.displayError('Unable to find editor for: '
+								+ field.type);
+					}
+				});
+			},
+			save : function(config, properties){
+				$.each(config.fields, function(idx, field){
+					if(Stevenson.ui.Editor.types[field.type]) {
+						Stevenson.log.debug('Saving field '+field.name+' of type '+ field.type);
+						Stevenson.ui.Editor.types[field.type].save(field, properties);
+					} else {
+						Stevenson.ui.Messages.displayError('Unable to find editor for: '
+								+ field.type);
+					}
+				});
+			},
+			types : {
+				text: {
+					load: function(container, field, value){
+						if(field.label){
+							container.append('<label class="control-label" for="'+field.name+'">'+field.label+'</label>');
+						}
+						var html = '<div class="controls"><input type="text" name="'+field.name+'" value="'+value+'" ';
+						if(field.required){
+							html+='required="required"';
+						}
+						html+='/></div>';
+						container.append(html);
+					},
+					save: function(field, properties){
+						properties[field.name] = $('input[name='+field.name+']').val();
+					}
+				},
+				number: {
+					load: function(container, field, value){
+						if(field.label){
+							container.append('<label class="control-label" for="'+field.name+'">'+field.label+'</label>');
+						}
+						var html = '<div class="controls"><input type="number" name="'+field.name+'" value="'+value+'" ';
+						if(field.required){
+							html+='required="required"';
+						}
+						html+='/></div>';
+						container.append(html);
+					},
+					save: function(field, properties){
+						properties[field.name] = $('input[name='+field.name+']').val();
+					}
+				},
+				date: {
+					load: function(container, field, value){
+						if(field.label){
+							container.append('<label class="control-label" for="'+field.name+'">'+field.label+'</label>');
+						}
+						var html = '<div class="controls"><input type="date" name="'+field.name+'" value="'+value+'" ';
+						if(field.required){
+							html+='required="required"';
+						}
+						html+='/></div>';
+						container.append(html);
+					},
+					save: function(field, properties){
+						properties[field.name] = $('input[name='+field.name+']').val();
+					}
+				},
+				textarea: {
+					load: function(container, field, value){
+						if(field.label){
+							container.append('<label class="control-label" for="'+field.name+'">'+field.label+'</label>');
+						}
+						var html = '<div class="controls"><textarea name="'+field.name+'" ';
+						if(field.required){
+							html+='required="required"';
+						}
+						html+='>';
+						if(value){
+							html+=value;
+						}
+						html+='</textarea></div>';
+						container.append(html);
+					},
+					save: function(field, properties, id){
+						properties[field.name] = $('textarea[name='+field.name+']').val();
+					}
+				},
+				repeating: {
+					load: function(container, field, value){
+						if(field.label){
+							container.append('<label class="control-label" for="'+field.name+'">'+field.label+'</label>');
+						}
+						var controls = $(container.append('<div class="controls"></div>').find('.controls')[0]);
+						var values = $(controls.append('<div class="values" data-name="'+field.name+'"></div>').find('.values')[0]);
+						var count = 0;
+						if($.isArray(value)){
+							$.each(value, function(index, val){
+								var html = '<div id="'+field.name+'-value-'+index+'">';
+								html+='<input type="text" name="'+field.name+'" value="'+val+'" required="required" />';
+								html+='<a href="#" class="btn" onclick="$(\'#'+field.name+'-value-'+index+'\').remove()">-</a></div>';
+								values.append(html);
+								count++;
+							});
+						}
+						$(container.find('.values')[0]).attr('data-count', count);
+						controls.append('<br/><a href="#" class="btn" onclick="Stevenson.ui.Editor.types.repeating.addItem($($(this).parent().find(\'.values\')[0]));return false;">+</a>');
+					},
+					addItem: function(container){
+						var count = parseInt(container.attr('data-count')) + 1;
+						var name = container.attr('data-name');
+						var html = '<div id="'+name+'-value-'+count+'">';
+						html+='<input type="text" name="'+name+'" required="required" />';
+						html+='<a href="#" class="btn" value="-" onclick="$(\'#'+name+'-value-'+count+'\').remove();return false">-</a></div>';
+						container.append(html);
+						container.attr('count', count);
+					},
+					save: function(field, properties, id){
+						var values = [];
+						var inputs = $('input[name='+field.name+']');
+						for(idx = 0; idx < inputs.length; idx++){
+							values[idx] = $(inputs[idx]).val();
+						}
+						properties[field.name] = values;
+					}
+				}
+			}
+		},
+		/**
 		 * Handles messages to be displayed to the user.
 		 */
 		Messages : {

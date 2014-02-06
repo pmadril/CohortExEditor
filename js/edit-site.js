@@ -31,12 +31,10 @@
 			}
 		});
 	};
-	
 	Stevenson.ext.afterInit(function() {
 		Stevenson.log.info('Initializing files');
 		
 		$('.breadcrumb .repo').html(Stevenson.Account.repo);
-		$('.breadcrumb .branch').html(Stevenson.Account.branch);
 		
 		var path = window.location.hash;
 		if(path != ''){
@@ -45,37 +43,41 @@
 		$('.breadcrumb .path').html(path);
 		loadFiles(path);
 	});
-	
 	$(document).ready(function(){
-		$('#file-name-modal .btn').click(function() {
-                        $('#new-file-modal .modal-body .alert-error').remove();
-                        var name = $('#file-name').val();
-                        if(name != ''){
-                                var path = $('#files').attr('data-path');
-                                Stevenson.repo.savePage({
-                                        path: path+"/"+name,
-                                        page: {
-                                                content:''
-                                        },
-                                        message: 'Creating new page ' + name,
-                                        success: function(){
-                                                if(path.indexOf('_post') != -1) {
-                                                        window.location = 'edit-post.html?new=true&path='+$('#files').attr('data-path') + '&post=' + name;
-                                                } else {
-                                                        window.location = 'edit-page.html?new=true&path='+$('#files').attr('data-path') + '&page=' + name;
-                                                }        
-                                        },
-                                        error: function(msg){
-                                                $('#new-file-name').addClass('error');
-                                                $('#file-name-modal .modal-body').prepend('<div class="alert alert-error">Error creating page: '+msg+'.</div>');
-                                        }
-                                });
-
-                        } else {
-                                $('#new-file-name').addClass('error');
-                                $('#file-name-modal .modal-body').prepend('<div class="alert alert-error">Please enter a file name.</div>');
-                        }
-                });
+		$('#new-file-modal .yes').click(function() {
+			
+			$('#new-file-modal .modal-body .alert-error').remove();
+			var name = $('#file-name').val();
+			if(name != ''){
+				var path = $('#files').attr('data-path');
+				var filePath = path + "/" + name;
+				if(path == ""){
+					filePath = name;
+				}
+				$('#new-file-modal .btn, #new-file-modal input').attr('disabled','disabled');
+				Stevenson.repo.savePage({
+					path: filePath,
+					page: {
+						content:''
+						},
+					message: 'Creating new page ' + name,
+					success: function(){
+						window.location = 'edit-page.html?new=true&path='+$('#files').attr('data-path') + '&page=' + name;
+					},
+					error: function(msg){
+						$('#new-file-modal .btn, #new-file-modal input').removeAttr('disabled');
+						$('#new-file-name').addClass('error');
+						$('#new-file-modal .modal-body').prepend('<div class="alert alert-error">Error creating page: '+msg+'.</div>');
+					}
+				});
+			} else {
+				$('#new-file-name').addClass('error');
+				$('#file-name-modal .modal-body').prepend('<div class="alert alert-error">Please enter a file name.</div>');
+			}
+		});
+		$('#new-file-modal .no').click(function() {
+			$('#new-file-modal').modal('hide');
+		});
 		$('.new').click(function(){
 			$('#new-file-modal').modal({
 				show: true
@@ -85,12 +87,7 @@
 		$('.file-edit').click(function(){
 			Stevenson.ui.Loader.display('Loading editor...', 100);
 			var path = $('#files input[type=checkbox]:checked').parents('tr').attr('data-path');
-			var lowerPost = path.toLowerCase();
-			if(lowerPost.indexOf('_post') != -1) {
-				window.location = 'edit-post.html?post=' + path + '&path='+$('#files').attr('data-path');
-			} else {
-				window.location = 'edit-page.html?page=' + path + '&path='+$('#files').attr('data-path');
-			}
+			window.location = 'edit-page.html?page=' + path + '&path='+$('#files').attr('data-path');
 			return false;
 		});
 		$('.file-delete').click(function(){

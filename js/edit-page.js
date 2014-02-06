@@ -1,4 +1,5 @@
 (function($) {
+	var editorConfig = null;
 	var currentPage = null;
 	Stevenson.ext.afterInit(function() {
 		Stevenson.log.info('Editing page');
@@ -12,33 +13,53 @@
 			Stevenson.ui.Messages.displayError('Website repository not set.  <a href="account.html">Configure</a>');
 		}
 
-		var postPath = Stevenson.util.getParameter('page');
+		var pagePath = Stevenson.util.getParameter('page');
 
-		if(postPath == '' || postPath.indexOf('.html') != -1){
+		if(pagePath == '' || pagePath.indexOf('.html') != -1){
 			new nicEditor({
 				iconsPath : './img/nicEditorIcons.gif'
 			}).panelInstance('content');
 		}
 
-		$('h2').append(postPath);
+		$('h2').append(pagePath);
 		$('.cancel').attr('href', 'edit-site.html#' + Stevenson.util.getParameter('path'));
 		if (Stevenson.util.getParameter('new') == 'true') {
 			Stevenson.log.info('Creating new page');
-			currentPage = new Page(postPath, '');
+			currentPage = new Page(pagePath, '');
 		} else {
 			Stevenson.ui.Loader.display('Loading page...', 100);
 			Stevenson.log.info('Updating existing page');
 			Stevenson.repo.getFile({
-				path: postPath,
+				path: pagePath,
 				success: function(file){
 					Stevenson.log.debug('Retrieved page');
 
 					currentPage = file;
-					Stevenson.log.debug('Setting properties');
+					
+					Stevenson.log.debug('Loading properties editor');
 					var properties = file.getProperties();
 					if(properties) {
+						var loadEditor = function(layout){
+							Stevenson.repo.getFile({
+								path: '_editors/'+layout+'.json',
+								success: function(file){
+									editorConfig = JSON.parse(file.getPageContent());
+									Stevenson.ui.Editor.load(editorConfig, properties);
+									Stevenson.ui.Loader.hide();
+								},
+								error:  function(message){
+									Stevenson.ui.Loader.hide();
+									Stevenson.ui.Messages.displayError('Exception loading properties: '
+											+ message);
+								}
+							});
+						}
 						$('#layout').val(properties.layout);
-						$('#title').val(properties.title);
+						$('#layout').change(function(){
+							$('.properties .fields').html('');
+							loadEditor($('#layout').val());
+						});
+						loadEditor(properties.layout);
 					} else {
 						$('.container.properties').hide();
 					}
@@ -52,7 +73,6 @@
 						$('#content').html(file.getPageContent());
 					}
 					
-					Stevenson.ui.Loader.hide();
 				},
 				error: function(message){
 					Stevenson.ui.Loader.hide();
@@ -73,12 +93,12 @@
 			var title = $('#title').val();
 			if(properties) {
 				properties.layout = layout;
-				properties.title = title;
+				Stevenson.ui.Editor.save(editorConfig, properties);
 			} else {
-				if(layout != '' || title != ''){
+				if(layout != ''){
 					properties = {};
 					properties.layout = layout;
-					properties.title = title;
+					Stevenson.ui.Editor.save(editorConfig, properties);
 				}
 			}
 			
@@ -110,8 +130,8 @@
 							+ message);
 				},
 				success: function(){
+					Stevenson.ui.Messages.displayMessage('Page saved successfully!');
 					Stevenson.ui.Loader.hide();
-					window.location = 'edit-site.html#' + Stevenson.util.getParameter('path');
 				}
 			});
 		});
