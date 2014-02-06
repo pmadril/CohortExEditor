@@ -1,6 +1,21 @@
 (function($) {
 	var editorConfig = null;
 	var currentPage = null;
+	var loadEditor = function(layout, properties){
+		Stevenson.repo.getFile({
+			path: '_editors/'+layout+'.json',
+			success: function(file){
+				editorConfig = JSON.parse(file.getPageContent());
+				Stevenson.ui.Editor.load(editorConfig, properties);
+				Stevenson.ui.Loader.hide();
+			},
+			error:  function(message){
+				Stevenson.ui.Loader.hide();
+				Stevenson.ui.Messages.displayError('Exception loading properties: '
+						+ message);
+			}
+		});
+	};
 	Stevenson.ext.afterInit(function() {
 		Stevenson.log.info('Editing page');
 
@@ -26,6 +41,11 @@
 		if (Stevenson.util.getParameter('new') == 'true') {
 			Stevenson.log.info('Creating new page');
 			currentPage = new Page(pagePath, '');
+
+			$('#layout').change(function(){
+				$('.properties .fields').html('');
+				loadEditor($('#layout').val(),{});
+			});
 		} else {
 			Stevenson.ui.Loader.display('Loading page...', 100);
 			Stevenson.log.info('Updating existing page');
@@ -33,35 +53,15 @@
 				path: pagePath,
 				success: function(file){
 					Stevenson.log.debug('Retrieved page');
-
 					currentPage = file;
-					
 					Stevenson.log.debug('Loading properties editor');
 					var properties = file.getProperties();
 					if(properties) {
-						var loadEditor = function(layout){
-							Stevenson.repo.getFile({
-								path: '_editors/'+layout+'.json',
-								success: function(file){
-									editorConfig = JSON.parse(file.getPageContent());
-									Stevenson.ui.Editor.load(editorConfig, properties);
-									Stevenson.ui.Loader.hide();
-								},
-								error:  function(message){
-									Stevenson.ui.Loader.hide();
-									Stevenson.ui.Messages.displayError('Exception loading properties: '
-											+ message);
-								}
-							});
-						}
 						$('#layout').val(properties.layout);
-						$('#layout').change(function(){
-							$('.properties .fields').html('');
-							loadEditor($('#layout').val());
-						});
-						loadEditor(properties.layout);
+						loadEditor(properties.layout, properties);
 					} else {
 						$('.container.properties').hide();
+						Stevenson.ui.Loader.hide();
 					}
 					
 					Stevenson.log.debug('Setting content');
@@ -72,7 +72,6 @@
 					} else {
 						$('#content').html(file.getPageContent());
 					}
-					
 				},
 				error: function(message){
 					Stevenson.ui.Loader.hide();

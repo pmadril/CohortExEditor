@@ -185,7 +185,7 @@ var Stevenson ={
 			var gh = Stevenson.repo.getGitHub();
 			var repo = gh.getRepo(Stevenson.Account.repo.split('/')[0], Stevenson.Account.repo
 					.split('/')[1]);
-			repo.remove(Stevenson.Account.branch, settings.path, function(err, file) {
+			repo.delete(Stevenson.Account.branch, settings.path, function(err, file) {
 				if (err) {
 					settings.error(Stevenson.repo.getErrorMessage(err));
 				} else {
@@ -444,7 +444,11 @@ var Stevenson ={
 						Stevenson.log.debug('Loading field '+field.name+' of type '+ field.type);
 						$('.properties .fields').append('<div class="control-group" id="field-'+idx+'"></div>');
 						var container = $('#field-'+idx);
-						Stevenson.ui.Editor.types[field.type].load(container, field, properties[field.name]);
+						var value = '';
+						if(properties[field.name]){
+							value = properties[field.name];
+						}
+						Stevenson.ui.Editor.types[field.type].load(container, field, value);
 					} else {
 						Stevenson.ui.Messages.displayError('Unable to find editor for: '
 								+ field.type);
@@ -520,11 +524,7 @@ var Stevenson ={
 						if(field.required){
 							html+='required="required"';
 						}
-						html+='>';
-						if(value){
-							html+=value;
-						}
-						html+='</textarea></div>';
+						html+='>'+value+'</textarea></div>';
 						container.append(html);
 					},
 					save: function(field, properties, id){

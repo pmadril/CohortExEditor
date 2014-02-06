@@ -62,7 +62,7 @@
 						},
 					message: 'Creating new page ' + name,
 					success: function(){
-						window.location = 'edit-page.html?new=true&path='+$('#files').attr('data-path') + '&page=' + name;
+						window.location = 'edit-page.html?new=true&page='+$('#files').attr('data-path') + '/' + name;
 					},
 					error: function(msg){
 						$('#new-file-modal .btn, #new-file-modal input').removeAttr('disabled');
@@ -103,6 +103,11 @@
 					success: function(path){
 						Stevenson.ui.Messages.displayMessage("Deleted file: "+path);
 						Stevenson.ui.Loader.hide();
+						var path = window.location.hash;
+						if(path != ''){
+							path = path.substr(1);
+						}
+						loadFiles(path);
 					},
 					error: function(message){
 						Stevenson.ui.Messages.displayError("Failed to delete file: "+path+" due to error "+message);
@@ -115,7 +120,6 @@
 				$('#loading-modal').modal('hide');
 				return false;
 			});
-			return false;
 		});
 	});
 })(jQuery);
