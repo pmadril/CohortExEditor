@@ -2,17 +2,17 @@
 	var editorConfig = null;
 	var currentPage = null;
 	var loadEditor = function(layout, properties){
-		Stevenson.repo.getFile({
-			path: '_editors/'+layout+'.json',
-			success: function(file){
-				editorConfig = JSON.parse(file.getPageContent());
+		Stevenson.repo.getEditorConfig({
+			layout: layout,
+			success: function(config){
+				editorConfig = config;
 				Stevenson.ui.Editor.load(editorConfig, properties);
 				Stevenson.ui.Loader.hide();
 			},
 			error:  function(message){
 				Stevenson.ui.Loader.hide();
-				Stevenson.ui.Messages.displayError('Exception loading properties: '
-						+ message);
+				Stevenson.ui.Messages.displayError('Exception loading properties editor: '
+						+ message+', if you haven\' already, <a href="edit-layout.html?layout='+layout+'">configure the editor for this template</a>.');
 			}
 		});
 	};
@@ -63,6 +63,10 @@
 						$('.container.properties').hide();
 						Stevenson.ui.Loader.hide();
 					}
+					$('#layout').change(function(){
+						$('.properties .fields').html('');
+						loadEditor($('#layout').val(),properties);
+					});
 					
 					Stevenson.log.debug('Setting content');
 					

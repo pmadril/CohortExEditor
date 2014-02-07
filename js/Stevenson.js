@@ -372,11 +372,41 @@ var Stevenson ={
 				};
 			});
 		},
+		getEditorConfig: function(options){
+			var settings = $.extend({}, {
+				success: function(repo){},
+				error: function(err){}
+			}, options);
+			Stevenson.repo.getFile({
+				path: '_editors/'+settings.layout+'.json',
+				success: function(file){
+					settings.success(JSON.parse(file.getPageContent()));
+				},
+				error:  function(message){
+					Stevenson.repo.getFile({
+						path:'_layouts/'+settings.layout+'.html',
+						success: function(file){
+							var properties = file.getProperties();
+							if(properties && properties.layout){
+								Stevenson.repo.getEditorConfig({
+									success: settings.success,
+									error: settings.error,
+									layout: properties.layout
+								});
+							}else{
+								settings.error('not configured');
+							}
+						},
+						error:settings.error
+					});
+				}
+			});
+		},
 		getRepo: function(options){
 			var settings = $.extend({}, {
 				success: function(repo){},
 				error: function(err){}
-				}, options);
+			}, options);
 			
 			var gh = Stevenson.repo.getGitHub(options);
 			try{
@@ -396,8 +426,7 @@ var Stevenson ={
 			var settings = $.extend({}, {
 				success: function(branches){},
 				error: function(err){}
-				}, options);
-			
+			}, options);
 			var gh = Stevenson.repo.getGitHub(options);
 			var user = gh.getUser();
 			user.repos(function(err, repos) {
