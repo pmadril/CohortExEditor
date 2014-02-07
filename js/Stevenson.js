@@ -176,6 +176,26 @@ var Stevenson ={
 	},
 	repo: {
 		layouts: [],
+		copyFile: function(options){
+			var settings = $.extend({}, {
+				success: function(file){},
+				error: function(err){}
+			}, options);
+			Stevenson.repo.getFile({
+				success: function(page){
+					page.path = settings.newPath;
+					Stevenson.repo.savePage({
+						message: "Copying contents of file "+settings.oldFile+" to "+settings.newFile,
+						path: settings.newPath,
+						page: page,
+						success: settings.success,
+						error: settings.error
+					});
+				},
+				error: settings.error,
+				path: settings.oldPath
+			});
+		},
 		deleteFile: function(options){
 			var settings = $.extend({}, {
 				success: function(file){},
@@ -409,11 +429,40 @@ var Stevenson ={
 				}
 			});
 		},
+		moveFile: function(options){
+			var settings = $.extend({}, {
+				success: function(file){},
+				error: function(err){}
+			}, options);
+			Stevenson.repo.getFile({
+				success: function(page){
+					page.path = settings.newPath;
+					Stevenson.repo.savePage({
+						message: "Copying contents of file "+settings.oldFile+" to "+settings.newFile,
+						path: settings.newPath,
+						page: page,
+						success: function(){
+							Stevenson.repo.deleteFile({
+								success: settings.success,
+								error: settings.error,
+								path: settings.oldPath
+							});
+						},
+						error: settings.error
+					});
+				},
+				error: settings.error,
+				path: settings.oldPath
+			});
+		},
 		savePage: function(options){
 			var settings = $.extend({}, {
 				success: function(user){},
 				error: function(err){}
 			}, options);
+			if(settings.path.indexOf('/')==0){
+				settings.path = settings.path.substring(1);
+			}
 			var gh = Stevenson.repo.getGitHub();
 			var repo = gh.getRepo(Stevenson.Account.repo.split('/')[0], Stevenson.Account.repo
 					.split('/')[1]);

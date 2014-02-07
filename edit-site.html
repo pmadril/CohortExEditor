@@ -42,7 +42,7 @@ scripts: [js/edit-site.js]
 				</a>
 				<ul class="dropdown-menu">
 					<li>
-						<a href="#" class="site-configure">Configure</a>
+						<a href="edit-page.html?path=&page=_config.yaml" class="site-configure">Configure</a>
 					</li>
 					<li>
 						<a href="#" class="site-templates">Templates</a>
@@ -88,11 +88,45 @@ scripts: [js/edit-site.js]
 		<a href="#" class="btn cancel no">Cancel</a>&nbsp;<a href="#" class="btn btn-success yes">Create File &gt;</a>
 	</div>
 </div>
+<div id="move-modal" class="modal hide">
+	<div class="modal-header">
+		<h3>Move File</h3>
+	</div>
+	<div class="modal-body">
+		<label for="file-name">New Location</label>
+		<input type="text" id="new-path" /><br/>
+		<input type="hidden" id="old-path" />
+		<a href="#" class="btn cancel no">Cancel</a>&nbsp;<a href="#" class="btn btn-success yes">Move File &gt;</a>
+	</div>
+</div>
+<div id="copy-modal" class="modal hide">
+	<div class="modal-header">
+		<h3>Copy File</h3>
+	</div>
+	<div class="modal-body">
+		<label for="file-name">New Location</label>
+		<input type="text" id="new-path" /><br/>
+		<input type="hidden" id="old-path" />
+		<a href="#" class="btn cancel no">Cancel</a>&nbsp;<a href="#" class="btn btn-success yes">Copy File &gt;</a>
+	</div>
+</div>
 <div id="delete-file-modal" class="modal hide">
 	<div class="modal-header">
 		<h3>Really Delete File?</h3>
 	</div>
 	<div class="modal-body">
 		<a href="#" class="btn btn-danger yes">Yes</a>&nbsp;<a href="#" class="btn no">No</a>
+	</div>
+</div>
+<div id="upload-modal" class="modal hide">
+	<div class="modal-header">
+		<h3>Upload File</h3>
+	</div>
+	<div class="modal-body">
+		<label for="path">Location</label>
+		<input type="text" class="path" />
+		<label for="file">Select File</label>
+		<input type="file" class="file" id="upload-file-input" />
+		<a href="#" class="btn cancel no">Cancel</a>&nbsp;<a href="#" class="btn btn-success yes">Upload File &gt;</a>
 	</div>
 </div>
