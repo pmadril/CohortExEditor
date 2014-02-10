@@ -17,6 +17,16 @@
 				$('.folder-close').click(function(){
 					loadFiles($(this).attr('data-path'));
 				});
+				$('#files .file').click({
+					$('#files input[type=checkbox]').each(function(index, item){
+						if(item != checked){
+							$(item).removeAttr('checked');
+						}
+					});
+					$(this).find('input[type=checkbox]').each(function(idx, elem){
+						$(elem).attr('checked','checked');
+					})
+				});
 				$('#files input[type=checkbox]').click(function(){
 					var checked = this;
 					$('#files input[type=checkbox]').each(function(index, item){
