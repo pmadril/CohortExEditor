@@ -1,4 +1,5 @@
 (function($) {
+	var htmlEditor = false;
 	var editorConfig = null;
 	var currentPage = null;
 	var loadEditor = function(layout, properties){
@@ -7,6 +8,15 @@
 			success: function(config){
 				editorConfig = config;
 				Stevenson.ui.Editor.load(editorConfig, properties);
+				var rteConfig = $.extend({
+					selector: '#content',
+					menubar: false
+				}, config.rte);
+				var pagePath = Stevenson.util.getParameter('page');
+				if(pagePath == '' || pagePath.indexOf('.html') != -1){
+					tinymce.init(rteConfig);
+				}
+				htmlEditor = true;
 				Stevenson.ui.Loader.hide();
 			},
 			error:  function(message){
@@ -30,14 +40,6 @@
 
 		var pagePath = Stevenson.util.getParameter('page');
 
-		if(pagePath == '' || pagePath.indexOf('.html') != -1){
-			tinymce.init({
-				selector: '#content',
-				document_base_url: "http://labs.sixdimensions.com",
-				menubar: false
-			});
-		}
-
 		$('h2').append(pagePath);
 		$('.cancel').attr('href', 'edit-site.html#' + Stevenson.util.getParameter('path'));
 		if (Stevenson.util.getParameter('new') == 'true') {
@@ -56,6 +58,10 @@
 				success: function(file){
 					Stevenson.log.debug('Retrieved page');
 					currentPage = file;
+					
+					Stevenson.log.debug('Setting content');
+					$('#content').val(file.getPageContent());
+					
 					Stevenson.log.debug('Loading properties editor');
 					var properties = file.getProperties();
 					if(properties) {
@@ -69,9 +75,6 @@
 						$('.properties .fields').html('');
 						loadEditor($('#layout').val(),properties);
 					});
-					
-					Stevenson.log.debug('Setting content');
-					tinyMCE.activeEditor.setContent(file.getPageContent(), {format : 'raw'});
 				},
 				error: function(message){
 					Stevenson.ui.Loader.hide();
@@ -111,9 +114,8 @@
 				Stevenson.log.debug('Not adding Jekyll header');
 			}
 			
-			var edit = nicEditors.findEditor('content');
-			if(edit) {
-				newContent += edit.getContent();
+			if(htmlEditor) {
+				newContent += tinymce.activeEditor.getContent();
 			} else {
 				newContent += $('#content').val();
 			}
