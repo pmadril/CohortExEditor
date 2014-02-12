@@ -31,9 +31,11 @@
 		var pagePath = Stevenson.util.getParameter('page');
 
 		if(pagePath == '' || pagePath.indexOf('.html') != -1){
-			new nicEditor({
-				iconsPath : './img/nicEditorIcons.gif'
-			}).panelInstance('content');
+			tinymce.init({
+				selector: '#content',
+				document_base_url: "http://labs.sixdimensions.com",
+				menubar: false
+			});
 		}
 
 		$('h2').append(pagePath);
@@ -69,13 +71,7 @@
 					});
 					
 					Stevenson.log.debug('Setting content');
-					
-					var edit = nicEditors.findEditor('content');
-					if(edit) {
-						edit.setContent(file.getPageContent());
-					} else {
-						$('#content').html(file.getPageContent());
-					}
+					tinyMCE.activeEditor.setContent(file.getPageContent(), {format : 'raw'});
 				},
 				error: function(message){
 					Stevenson.ui.Loader.hide();
