@@ -601,6 +601,15 @@ var Stevenson ={
 					}
 				},
 				repeating: {
+					addItem: function(container){
+						var count = parseInt(container.attr('data-count')) + 1;
+						var name = container.attr('data-name');
+						var html = '<div id="'+name+'-value-'+count+'">';
+						html+='<input type="text" name="'+name+'" required="required" />';
+						html+='<a href="#" class="btn" value="-" onclick="$(\'#'+name+'-value-'+count+'\').remove();return false">-</a></div>';
+						container.append(html);
+						container.attr('data-count', count);
+					},
 					load: function(container, field, properties){
 						if(field.label){
 							container.append('<label class="control-label" for="'+field.name+'">'+field.label+'</label>');
@@ -618,16 +627,7 @@ var Stevenson ={
 							});
 						}
 						$(container.find('.values')[0]).attr('data-count', count);
-						controls.append('<br/><a href="#" class="btn" onclick="Stevenson.ui.Editor.types.repeating.addItem($($(this).parent().parent().find(\'.values\')[0]));return false;">+</a>');
-					},
-					addItem: function(container){
-						var count = parseInt(container.attr('data-count')) + 1;
-						var name = container.attr('data-name');
-						var html = '<div id="'+name+'-value-'+count+'">';
-						html+='<input type="text" name="'+name+'" required="required" />';
-						html+='<a href="#" class="btn" value="-" onclick="$(\'#'+name+'-value-'+count+'\').remove();return false">-</a></div>';
-						container.append(html);
-						container.attr('count', count);
+						controls.append('<br/><a href="#" class="btn" onclick="Stevenson.ui.Editor.types.repeating.addItem($($(this).parent().find(\'.values\')[0]));return false;">+</a>');
 					},
 					save: function(field, properties, id){
 						var values = [];
