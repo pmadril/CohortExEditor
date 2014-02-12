@@ -545,12 +545,24 @@ var Stevenson ={
 				});
 			},
 			types : {
-				text: {
+				checkbox: {
 					load: function(container, field, value){
 						if(field.label){
 							container.append('<label class="control-label" for="'+field.name+'">'+field.label+'</label>');
 						}
-						var html = '<div class="controls"><input type="text" name="'+field.name+'" value="'+value+'" ';
+						var html = '<div class="controls"><input type="checkbox" name="'+field.name+'" ' + (field.value == true ?  'checked="checked"' : '') + ' /></div>';
+						container.append(html);
+					},
+					save: function(field, properties){
+						properties[field.name] = $('input[name='+field.name+']').checked();
+					}
+				},
+				date: {
+					load: function(container, field, value){
+						if(field.label){
+							container.append('<label class="control-label" for="'+field.name+'">'+field.label+'</label>');
+						}
+						var html = '<div class="controls"><input type="date" name="'+field.name+'" value="'+value+'" ';
 						if(field.required){
 							html+='required="required"';
 						}
@@ -575,38 +587,6 @@ var Stevenson ={
 					},
 					save: function(field, properties){
 						properties[field.name] = $('input[name='+field.name+']').val();
-					}
-				},
-				date: {
-					load: function(container, field, value){
-						if(field.label){
-							container.append('<label class="control-label" for="'+field.name+'">'+field.label+'</label>');
-						}
-						var html = '<div class="controls"><input type="date" name="'+field.name+'" value="'+value+'" ';
-						if(field.required){
-							html+='required="required"';
-						}
-						html+='/></div>';
-						container.append(html);
-					},
-					save: function(field, properties){
-						properties[field.name] = $('input[name='+field.name+']').val();
-					}
-				},
-				textarea: {
-					load: function(container, field, value){
-						if(field.label){
-							container.append('<label class="control-label" for="'+field.name+'">'+field.label+'</label>');
-						}
-						var html = '<div class="controls"><textarea name="'+field.name+'" ';
-						if(field.required){
-							html+='required="required"';
-						}
-						html+='>'+value+'</textarea></div>';
-						container.append(html);
-					},
-					save: function(field, properties, id){
-						properties[field.name] = $('textarea[name='+field.name+']').val();
 					}
 				},
 				repeating: {
@@ -645,6 +625,38 @@ var Stevenson ={
 							values[idx] = $(inputs[idx]).val();
 						}
 						properties[field.name] = values;
+					}
+				}
+				text: {
+					load: function(container, field, value){
+						if(field.label){
+							container.append('<label class="control-label" for="'+field.name+'">'+field.label+'</label>');
+						}
+						var html = '<div class="controls"><input type="text" name="'+field.name+'" value="'+value+'" ';
+						if(field.required){
+							html+='required="required"';
+						}
+						html+='/></div>';
+						container.append(html);
+					},
+					save: function(field, properties){
+						properties[field.name] = $('input[name='+field.name+']').val();
+					}
+				},
+				textarea: {
+					load: function(container, field, value){
+						if(field.label){
+							container.append('<label class="control-label" for="'+field.name+'">'+field.label+'</label>');
+						}
+						var html = '<div class="controls"><textarea name="'+field.name+'" ';
+						if(field.required){
+							html+='required="required"';
+						}
+						html+='>'+value+'</textarea></div>';
+						container.append(html);
+					},
+					save: function(field, properties, id){
+						properties[field.name] = $('textarea[name='+field.name+']').val();
 					}
 				}
 			}
