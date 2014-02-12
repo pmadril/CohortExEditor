@@ -618,7 +618,7 @@ var Stevenson ={
 							});
 						}
 						$(container.find('.values')[0]).attr('data-count', count);
-						controls.append('<br/><a href="#" class="btn" onclick="Stevenson.ui.Editor.types.repeating.addItem($($(this).parent().find(\'.values\')[0]));return false;">+</a>');
+						controls.append('<br/><a href="#" class="btn" onclick="Stevenson.ui.Editor.types.repeating.addItem($($(this).parent().parent().find(\'.values\')[0]));return false;">+</a>');
 					},
 					addItem: function(container){
 						var count = parseInt(container.attr('data-count')) + 1;
