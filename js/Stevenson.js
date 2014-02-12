@@ -553,7 +553,7 @@ var Stevenson ={
 						container.append(html);
 					},
 					save: function(field, properties){
-						properties[field.name] = $('input[name='+field.name+']').checked();
+						properties[field.name] = $('input[name='+field.name+']').is(':checked');
 					}
 				},
 				date: {
