@@ -521,12 +521,7 @@ var Stevenson ={
 					if(Stevenson.ui.Editor.types[field.type]) {
 						Stevenson.log.debug('Loading field '+field.name+' of type '+ field.type);
 						$('.properties .fields').append('<div class="control-group" id="field-'+idx+'"></div>');
-						var container = $('#field-'+idx);
-						var value = '';
-						if(properties[field.name]){
-							value = properties[field.name];
-						}
-						Stevenson.ui.Editor.types[field.type].load(container, field, value);
+						Stevenson.ui.Editor.types[field.type].load($('#field-'+idx), field, properties);
 					} else {
 						Stevenson.ui.Messages.displayError('Unable to find editor for: '
 								+ field.type);
@@ -546,11 +541,15 @@ var Stevenson ={
 			},
 			types : {
 				checkbox: {
-					load: function(container, field, value){
+					load: function(container, field, properties){
 						if(field.label){
 							container.append('<label class="control-label" for="'+field.name+'">'+field.label+'</label>');
 						}
-						var html = '<div class="controls"><input type="checkbox" name="'+field.name+'" ' + (field.value == true ?  'checked="checked"' : '') + ' /></div>';
+						var checked = (properties[field.name] === true);
+						if(field.value == true && !(properties[field.name])){
+							checked = true;
+						}
+						var html = '<div class="controls"><input type="checkbox" name="'+field.name+'" ' + (checked ? 'checked="checked"' : '') + ' /></div>';
 						container.append(html);
 					},
 					save: function(field, properties){
@@ -558,9 +557,15 @@ var Stevenson ={
 					}
 				},
 				date: {
-					load: function(container, field, value){
+					load: function(container, field, properties){
 						if(field.label){
 							container.append('<label class="control-label" for="'+field.name+'">'+field.label+'</label>');
+						}
+						var value = '';
+						if(properties[field.name]){
+							value = properties[field.name];
+						} else if(field.value){
+							value = field.value;
 						}
 						var html = '<div class="controls"><input type="date" name="'+field.name+'" value="'+value+'" ';
 						if(field.required){
@@ -574,9 +579,15 @@ var Stevenson ={
 					}
 				},
 				number: {
-					load: function(container, field, value){
+					load: function(container, field, properties){
 						if(field.label){
 							container.append('<label class="control-label" for="'+field.name+'">'+field.label+'</label>');
+						}
+						var value = '';
+						if(properties[field.name]){
+							value = properties[field.name];
+						} else if(field.value){
+							value = field.value;
 						}
 						var html = '<div class="controls"><input type="number" name="'+field.name+'" value="'+value+'" ';
 						if(field.required){
@@ -590,15 +601,15 @@ var Stevenson ={
 					}
 				},
 				repeating: {
-					load: function(container, field, value){
+					load: function(container, field, properties){
 						if(field.label){
 							container.append('<label class="control-label" for="'+field.name+'">'+field.label+'</label>');
 						}
 						var controls = $(container.append('<div class="controls"></div>').find('.controls')[0]);
 						var values = $(controls.append('<div class="values" data-name="'+field.name+'"></div>').find('.values')[0]);
 						var count = 0;
-						if($.isArray(value)){
-							$.each(value, function(index, val){
+						if($.isArray(properties[field.name])){
+							$.each(properties[field.name], function(index, val){
 								var html = '<div id="'+field.name+'-value-'+index+'">';
 								html+='<input type="text" name="'+field.name+'" value="'+val+'" required="required" />';
 								html+='<a href="#" class="btn" onclick="$(\'#'+field.name+'-value-'+index+'\').remove()">-</a></div>';
@@ -628,9 +639,15 @@ var Stevenson ={
 					}
 				},
 				text: {
-					load: function(container, field, value){
+					load: function(container, field, properties){
 						if(field.label){
 							container.append('<label class="control-label" for="'+field.name+'">'+field.label+'</label>');
+						}
+						var value = '';
+						if(properties[field.name]){
+							value = properties[field.name];
+						} else if(field.value){
+							value = field.value;
 						}
 						var html = '<div class="controls"><input type="text" name="'+field.name+'" value="'+value+'" ';
 						if(field.required){
@@ -644,9 +661,15 @@ var Stevenson ={
 					}
 				},
 				textarea: {
-					load: function(container, field, value){
+					load: function(container, field, properties){
 						if(field.label){
 							container.append('<label class="control-label" for="'+field.name+'">'+field.label+'</label>');
+						}
+						var value = '';
+						if(properties[field.name]){
+							value = properties[field.name];
+						} else if(field.value){
+							value = field.value;
 						}
 						var html = '<div class="controls"><textarea name="'+field.name+'" ';
 						if(field.required){
