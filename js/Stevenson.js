@@ -626,7 +626,7 @@ var Stevenson ={
 						}
 						properties[field.name] = values;
 					}
-				}
+				},
 				text: {
 					load: function(container, field, value){
 						if(field.label){
