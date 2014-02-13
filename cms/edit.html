@@ -2,10 +2,10 @@
 layout: default 
 title: Edit Page
 authRequired: true
-scripts: [js/yaml.js, js/tinymce/tinymce.min.js, js/edit-page.js]
+scripts: [/js/yaml.js, /js/tinymce/tinymce.min.js, /js/edit-page.js]
 ---
 
-<a href="#" class="cancel">&lt; Back</a>
+<a href="javascript:window.history.back()" class="cancel">&lt; Back</a>
 <h2>Editing </h2>
 <form id="edit-page" class="form-horizontal">
 	<fieldset class="container properties">
@@ -35,7 +35,7 @@ scripts: [js/yaml.js, js/tinymce/tinymce.min.js, js/edit-page.js]
 			<div class="controls">
 				<br/>
 				<a class="btn btn-success save" href="#">Save Changes</a> &nbsp; 
-				<a class="btn cancel" href="edit-site.html">Cancel</a>
+				<a class="btn cancel" href="javascript:window.history.back()">Cancel</a>
 			</div>
 		</div>
 	</fieldset>

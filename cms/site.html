@@ -2,7 +2,7 @@
 layout: default 
 title: Edit Site
 authRequired: true
-scripts: [js/edit-site.js]
+scripts: [/js/edit-site.js]
 ---
 
 <div class="navbar">
@@ -42,10 +42,10 @@ scripts: [js/edit-site.js]
 				</a>
 				<ul class="dropdown-menu">
 					<li>
-						<a href="edit-page.html?path=&page=_config.yaml" class="site-configure">Configure</a>
+						<a href="/cms/edit.html?path=&page=_config.yaml" class="site-configure">Configure</a>
 					</li>
 					<li>
-						<a href="templates.html" class="site-templates">Templates</a>
+						<a href="/cms/templates.html" class="site-templates">Templates</a>
 					</li>
 				</ul>
 			</li>
@@ -53,8 +53,8 @@ scripts: [js/edit-site.js]
 	</div>
 </div>
 <ul class="breadcrumb">
-	<li><a href="editor-home.html">Home</a> <span class="divider">/</span></li>
-	<li><a href="edit-site.html" class="repo"></a> <span class="divider">/</span></li>
+	<li><a href="/cms">Home</a> <span class="divider">/</span></li>
+	<li><a href="/cms/site.html" class="repo"></a> <span class="divider">/</span></li>
 	<li class="active path">Data</li>
 </ul>
 <table class="table table-hover" id="files">

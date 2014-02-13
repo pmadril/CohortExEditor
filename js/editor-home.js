@@ -111,7 +111,7 @@
 			Stevenson.Account.save();
 			Stevenson.repo.getLayouts({
 				success: function(branches){
-					window.location = 'edit-site.html';
+					window.location = '/cms/site.html';
 				},
 				error: function(err){
 					Stevenson.ui.Messages.displayError('Unable to load layouts: '

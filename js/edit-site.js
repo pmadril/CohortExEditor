@@ -75,7 +75,7 @@
 						},
 					message: 'Creating new page ' + name,
 					success: function(){
-						window.location = 'edit-page.html?new=true&path='+$('#files').attr('data-path')+'&page='+$('#files').attr('data-path') + '/' + name;
+						window.location = '/cms/edit.html?new=true&path='+$('#files').attr('data-path')+'&page='+$('#files').attr('data-path') + '/' + name;
 					},
 					error: function(msg){
 						$('#new-file-modal .btn, #new-file-modal input').removeAttr('disabled');
@@ -104,7 +104,7 @@
 		$('.file-edit').click(function(){
 			Stevenson.ui.Loader.display('Loading editor...', 100);
 			var path = $('#files input[type=checkbox]:checked').parents('tr').attr('data-path');
-			window.location = 'edit-page.html?page=' + path + '&path='+$('#files').attr('data-path');
+			window.location = '/cms/edit.html?page=' + path + '&path='+$('#files').attr('data-path');
 			return false;
 		});
 		

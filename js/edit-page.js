@@ -36,13 +36,12 @@
 	
 		if (Stevenson.Account.repo == '') {
 			Stevenson.log.warn('Website repository not set');
-			Stevenson.ui.Messages.displayError('Website repository not set.  <a href="account.html">Configure</a>');
+			Stevenson.ui.Messages.displayError('Website repository not set.  <a href="/cms">Configure</a>');
 		}
 
 		var pagePath = Stevenson.util.getParameter('page');
 
 		$('h2').append(pagePath);
-		$('.cancel').attr('href', 'edit-site.html#' + Stevenson.util.getParameter('path'));
 		if (Stevenson.util.getParameter('new') == 'true') {
 			Stevenson.log.info('Creating new page');
 			currentPage = new Page(pagePath, '');

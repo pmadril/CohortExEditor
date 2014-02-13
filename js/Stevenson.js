@@ -68,7 +68,7 @@ var Stevenson ={
 		});
 		
 		Stevenson.log.debug("Loading the global CMS template");
-		$.Mustache.load('./templates/cms.html');
+		$.Mustache.load('/templates/cms.html');
 		
 		Stevenson.log.info('Initializing application');
 	
@@ -92,7 +92,7 @@ var Stevenson ={
 		}else{
 			if (Stevenson.Account.authenticated && Stevenson.Account.authenticated == true) {
 				Stevenson.log.debug("Adding logged in top section");
-				$.Mustache.load('./templates/authentication.html').done(function () {
+				$.Mustache.load('/templates/authentication.html').done(function () {
 					$('#top-login').html('');
 					$('#top-login').mustache('top-bar', {name: Stevenson.Account.name});
 				});
