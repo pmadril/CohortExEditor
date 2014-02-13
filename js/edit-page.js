@@ -123,11 +123,11 @@
 			
 			Stevenson.repo.savePage({
 				page: currentPage,
-				path: Stevenson.util.getParameter('page'),
+				path: window.location.hash.substr(1),
 				message: $('#message').val(),
 				error: function(message){
 					Stevenson.ui.Loader.hide();
-					Stevenson.ui.Messages.displayError('Exception loading page: '
+					Stevenson.ui.Messages.displayError('Exception saving page: '
 							+ message);
 				},
 				success: function(){
@@ -135,6 +135,7 @@
 					Stevenson.ui.Loader.hide();
 				}
 			});
+			return false;
 		});
 	});
 })(jQuery);

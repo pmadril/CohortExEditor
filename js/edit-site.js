@@ -95,7 +95,6 @@
 			$('#new-file-modal').modal({
 				show: true
 			});
-			return false;
 		});
 		
 		/**
@@ -152,7 +151,6 @@
 			$('#move-modal').modal({
 				show: true
 			});
-			return false;
 		});
 		$('#move-modal .no').click(function(){
 			$('#move-modal').modal('hide');
@@ -193,7 +191,6 @@
 			$('#copy-modal').modal({
 				show: true
 			});
-			return false;
 		});
 		$('#copy-modal .no').click(function(){
 			$('#copy-modal').modal('hide');
