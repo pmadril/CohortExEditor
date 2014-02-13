@@ -16,8 +16,8 @@
 				var pagePath = Stevenson.util.getParameter('page');
 				if(pagePath == '' || pagePath.indexOf('.html') != -1){
 					tinymce.init(rteConfig);
+					htmlEditor = true;
 				}
-				htmlEditor = true;
 				Stevenson.ui.Loader.hide();
 			},
 			error:  function(message){

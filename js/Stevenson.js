@@ -575,7 +575,12 @@ var Stevenson ={
 						container.append(html);
 					},
 					save: function(field, properties){
-						properties[field.name] = $('input[name='+field.name+']').val();
+						var value = $('input[name='+field.name+']').val();
+						if (value == '' && properties[field.name]) {
+							delete properties[field.name];
+						} else if (value != '') {
+							properties[field.name] = value;
+						}
 					}
 				},
 				number: {
@@ -597,7 +602,12 @@ var Stevenson ={
 						container.append(html);
 					},
 					save: function(field, properties){
-						properties[field.name] = $('input[name='+field.name+']').val();
+						var value = $('input[name='+field.name+']').val();
+						if (value == '' && properties[field.name]) {
+							delete properties[field.name];
+						} else if (value != '') {
+							properties[field.name] = value;
+						}
 					}
 				},
 				repeating: {
@@ -635,7 +645,11 @@ var Stevenson ={
 						for(idx = 0; idx < inputs.length; idx++){
 							values[idx] = $(inputs[idx]).val();
 						}
-						properties[field.name] = values;
+						if (values.length == 0 && properties[field.name]) {
+							delete properties[field.name];
+						} else if (values != []) {
+							properties[field.name] = values;
+						}
 					}
 				},
 				text: {
@@ -657,7 +671,12 @@ var Stevenson ={
 						container.append(html);
 					},
 					save: function(field, properties){
-						properties[field.name] = $('input[name='+field.name+']').val();
+						var value = $('input[name='+field.name+']').val();
+						if (value == '' && properties[field.name]) {
+							delete properties[field.name];
+						} else if (value != '') {
+							properties[field.name] = value;
+						}
 					}
 				},
 				textarea: {
@@ -679,7 +698,12 @@ var Stevenson ={
 						container.append(html);
 					},
 					save: function(field, properties, id){
-						properties[field.name] = $('textarea[name='+field.name+']').val();
+						var value = $('textarea[name='+field.name+']').val();
+						if (value == '' && properties[field.name]) {
+							delete properties[field.name];
+						} else if (value != '') {
+							properties[field.name] = value;
+						}
 					}
 				}
 			}
