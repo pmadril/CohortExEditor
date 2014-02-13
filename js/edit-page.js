@@ -10,6 +10,7 @@
 				Stevenson.ui.Editor.load(editorConfig, properties);
 				var rteConfig = $.extend({
 					selector: '#content',
+					plugins: ["advlist autolink link image lists visualblocks code media table contextmenu"],
 					menubar: false
 				}, config.rte);
 				var pagePath = Stevenson.util.getParameter('page');
