@@ -1,5 +1,4 @@
 (function($) {
-	var htmlEditor = false;
 	var editorConfig = null;
 	var currentPage = null;
 	var loadEditor = function(layout, properties){
@@ -8,16 +7,7 @@
 			success: function(config){
 				editorConfig = config;
 				Stevenson.ui.Editor.load(editorConfig, properties);
-				var rteConfig = $.extend({
-					selector: '#content',
-					plugins: ["advlist autolink link image lists visualblocks code media table contextmenu"],
-					menubar: false
-				}, config.rte);
-				var pagePath = Stevenson.util.getParameter('page');
-				if(pagePath == '' || pagePath.indexOf('.html') != -1){
-					tinymce.init(rteConfig);
-					htmlEditor = true;
-				}
+				Stevenson.ui.ContentEditor.configure(editorConfig);
 				Stevenson.ui.Loader.hide();
 			},
 			error:  function(message){
@@ -45,6 +35,7 @@
 		if (Stevenson.util.getParameter('new') == 'true') {
 			Stevenson.log.info('Creating new page');
 			currentPage = new Page(pagePath, '');
+			Stevenson.ui.ContentEditor.setContent(currentPage);
 
 			$('#layout').change(function(){
 				$('.properties .fields').html('');
@@ -60,7 +51,7 @@
 					currentPage = file;
 					
 					Stevenson.log.debug('Setting content');
-					$('#content').val(file.getPageContent());
+					Stevenson.ui.ContentEditor.setContent(file);
 					
 					Stevenson.log.debug('Loading properties editor');
 					var properties = file.getProperties();
@@ -113,12 +104,7 @@
 			} else {
 				Stevenson.log.debug('Not adding Jekyll header');
 			}
-			
-			if(htmlEditor) {
-				newContent += tinymce.activeEditor.getContent();
-			} else {
-				newContent += $('#content').val();
-			}
+			newContent += Stevenson.ui.ContentEditor.getContent(currentPage);
 			currentPage.content = newContent;
 			
 			Stevenson.repo.savePage({

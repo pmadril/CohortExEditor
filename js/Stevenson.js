@@ -510,6 +510,130 @@ var Stevenson ={
 	 * User interface methods.
 	 */
 	ui: {
+		ContentEditor: {
+			currentEditor:null,
+			configure: function(config){
+				Stevenson.ui.ContentEditor.currentEditor.configure(config);
+			},
+			setContent: function(page) {
+				var editors = Stevenson.ui.ContentEditor.editors;
+				for(var i = 0; i < editors.length; i++) {
+					if(page.path.toLowerCase().match(editors[i].regex)) {
+						Stevenson.ui.ContentEditor.currentEditor = editors[i];
+						break;
+					}
+				}
+				$.Mustache.load('/templates/cms.html').done(function () {
+					Stevenson.ui.ContentEditor.currentEditor.setContent(page);
+				});
+			},
+			getContent: function(page){
+				return Stevenson.ui.ContentEditor.currentEditor.getContent(page);
+			},
+			editors: [
+				{
+					name: 'rte',
+					regex: '^.+\.(htm|html)$',
+					configure: function(config){
+						var rteConfig = $.extend({
+							selector: '#content',
+							plugins: ["advlist autolink link image lists visualblocks code media table contextmenu"],
+							menubar: false
+						}, config.rte);
+						tinymce.init(rteConfig);
+					},
+					setContent: function(page){
+						$('.content').mustache('page-content-textarea', {content: page.getPageContent()});
+					},
+					getContent: function(){
+						return tinymce.activeEditor.getContent();
+					}
+				},
+				{
+					name: 'text',
+					regex: '^.+\.(json|yaml|css|js|txt)$',
+					configure: function(config){
+					},
+					setContent: function(page){
+						$('.content').mustache('page-content-textarea', {content: page.getPageContent()});
+					},
+					getContent: function(){
+						return $('#content').val();
+					}
+				},
+				{
+					name: 'markdown',
+					regex: '^.+\.(md|markdown|mdtext)$',
+					configure: function(config){
+					},
+					setContent: function(page){
+						$('.content').mustache('page-content-markdown', {content: page.getPageContent()});
+						new EpicEditor({
+							textarea: 'content',
+							container: 'markdown-editor',
+							basePath: '/js/epiceditor',
+							autogrow: true
+						}).load();
+					},
+					getContent: function(){
+						return $('#content').val();
+					}				
+				},
+				{
+					name: 'image',
+					regex: '^.+\.(png|jpg|gif|ico|jpeg)$',
+					configure: function(config){
+					},
+					setContent: function(page){
+						$('.content').mustache('page-content-image', {
+							repo: Stevenson.Account.repo,
+							branch: Stevenson.Account.branch,
+							path: page.path
+						});
+						$('#upload-file-input').change(function(){
+							Stevenson.ui.Loader.display("Uploading file...");
+							var reader = new FileReader();
+							reader.onload = function(e) {
+								page.content = reader.result;
+								Stevenson.ui.Messages.displayMessage("Successfully uploaded file "+name);
+								Stevenson.ui.Loader.hide();
+							};
+							reader.readAsBinaryString(document.getElementById('upload-file-input').files[0]);
+						});
+					},
+					getContent: function(page){
+						return page.content;
+					}
+				},
+				{
+					name: 'binary',
+					regex: '.+',
+					configure: function(config){
+					},
+					setContent: function(page){
+						$('.content').mustache('page-content-image', {
+							repo: Stevenson.Account.repo,
+							branch: Stevenson.Account.branch,
+							path: page.path
+						});
+						$('#upload-file-input').change(function(){
+							Stevenson.ui.Loader.show("Uploading file...");
+							var reader = new FileReader();
+							reader.onload = function(e) {
+								page.content = reader.result;
+								Stevenson.ui.Messages.displayMessage("Successfully uploaded file "+name);
+								Stevenson.ui.Loader.hide();
+							};
+							reader.readAsBinaryString(document.getElementById('upload-file-input').files[0]);
+						});
+					},
+					getContent: function(page){
+						return page.content;
+					}
+				}
+				
+			]
+		},
 		/**
 		 * Handles the the display and updating of the properties.
 		 */
