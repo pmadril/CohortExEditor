@@ -20,6 +20,6 @@ body {
 	border-radius: 2px;
 }
 
-#your-repos-container li, #favorite-repos-container li {
+#your-repos-container li, #favorite-repos-container li, .list-unstyled li {
 	list-style: none;
 }

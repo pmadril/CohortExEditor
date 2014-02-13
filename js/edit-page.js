@@ -38,8 +38,8 @@
 			Stevenson.log.warn('Website repository not set');
 			Stevenson.ui.Messages.displayError('Website repository not set.  <a href="/cms">Configure</a>');
 		}
-
-		var pagePath = Stevenson.util.getParameter('page');
+		
+		var pagePath = window.location.hash.substr(1);
 
 		$('h2').append(pagePath);
 		if (Stevenson.util.getParameter('new') == 'true') {
