@@ -1,109 +1,84 @@
 (function($) {
-	var isLoading = false;
-	var handleRepoClick = function(){
-		Stevenson.ui.Loader.display('Loading branches...', 100);
-		var repo = $(this).attr('href');
-		Stevenson.repo.getBranches({
-			repoName: repo,
-			success: function(branches){
-				Stevenson.log.debug('Loaded branches: '+branches);
-				$('#branches').html('');
-				$.each(branches, function(index, branch) {
-					$('#branches').append(
-							'<option value="' + branch + '">'
-									+ branch + '</option>');
+	var loadRepos = function(group){
+		Stevenson.ui.Loader.display('Loading repositories...', 100);
+		Stevenson.log.info('Loading repositories for '+group);
+		Stevenson.repo.getRepos({
+			group: group,
+			success: function(repos){
+				var container = $('.tab-content #mine');
+				if(group) {
+					container = $('.tab-content #'+group);
+				}
+				$.each(repos, function(index, repo) {
+					var data = {
+						name: repo['full_name'],
+						description: repo['description']
+					};
+					container.mustache('repo-item', data);
 				});
-				$('#current-repo').html(repo);
 				Stevenson.ui.Loader.hide();
-				$('#branch-modal').modal('show');
-			},
-			error: function(err){
-				Stevenson.ui.Messages.displayError('Unable to load branches: '
-						+ err);
+				container.find('a.open').click(function(){
+					Stevenson.ui.Loader.display('Loading branches...', 100);
+					var repo = $(this).attr('data-repo');
+					Stevenson.repo.getBranches({
+						repoName: repo,
+						success: function(branches){
+							Stevenson.log.debug('Loaded branches: '+branches);
+							$('#branches').html('');
+							$.each(branches, function(index, branch) {
+								$('#branches').append('<option value="' + branch + '">'+ branch + '</option>');
+							});
+							$('#current-repo').html(repo);
+							Stevenson.ui.Loader.hide();
+							$('#branch-modal').modal('show');
+						},
+						error: function(err){
+							Stevenson.ui.Messages.displayError('Unable to load branches: '
+								+ err);
+							Stevenson.ui.Loader.hide();
+						}
+					});
+					return false;
+				});
+			}, 
+			error: function(message){
 				Stevenson.ui.Loader.hide();
+				isLoading = false;
+				Stevenson.ui.Messages.displayError('Unable to load repositories: '
+						+ message);
 			}
 		});
-		return false;
 	};
-	var handleFavoriteClick = function(){
-		var name = $(this).attr('href');
-		if(Stevenson.Account.favoriteRepos.indexOf(name) == -1){
-			Stevenson.log.debug('Adding repository ' + name + ' to favorites');
-			Stevenson.Account.favoriteRepos.push(name);
-			Stevenson.Account.save();
-		} else {
-			Stevenson.ui.Messages.displayError('Repository ' + name + ' is already a favorite');
-			Stevenson.log.warn('Repository ' + name + ' is already a favorite');
-		}
-		loadRepos();
-		return false;
-	};
-	var loadRepos = function(){
-		if(!isLoading){
-			isLoading = true;
-			Stevenson.ui.Loader.display('Loading repositories...', 100);
-			Stevenson.log.info('Initializing editor-home');
-			
-			$('#your-repos-container').html('');
-			$('#favorite-repos-container').html('');
-	
-			Stevenson.repo.getRepos({
-				success: function(repos){
-					$.each(repos, function(index, repo) {
-						var data = {
-							style: (index % 4 == 0) ? "margin-left:0;clear:both" : '',
-							name: repo['full_name'],
-							description: repo['description']
-						};
-						$('#your-repos-container').mustache('repo-item', data);
-					});
-					$.each(Stevenson.Account.favoriteRepos, function(findex, repo){
-						Stevenson.repo.getRepo({
-							name: repo,
-							success: function(repo){
-								var data = {
-									style: (findex % 4 == 0) ? "margin-left:0;clear:both" : '',
-									name: repo['full_name'],
-									description: repo['description']
-								};
-								var item = $('#favorite-repos-container').mustache('repo-item', data);
-								$(item).find('a.favorite').html('unfavorite');
-								$(item).find('a.favorite').click(function(){
-									var name = $(this).attr('href');
-									var idx = Stevenson.Account.favoriteRepos.indexOf(name);
-									if(idx != -1){
-										Stevenson.Account.favoriteRepos.splice(idx, 1);
-										Stevenson.Account.save();
-									} else {
-										Stevenson.log.warn('Repository ' + name + ' is not favorited');
-									}
-									loadRepos();
-									return false;
-								});
-								$(item).find('a.open').click(handleRepoClick);
-							},
-							error: function(message){
-								Stevenson.ui.Loader.hide();
-								Stevenson.ui.Messages.displayError('Unable to load repo: '
-										+ message);
-							}
-						});
-					});
-					Stevenson.ui.Loader.hide();
-					isLoading = false;
-					$('#your-repos-container a.open').click(handleRepoClick);
-					$('#your-repos-container .favorite').click(handleFavoriteClick);
-				}, 
-				error: function(message){
-					Stevenson.ui.Loader.hide();
-					isLoading = false;
-					Stevenson.ui.Messages.displayError('Unable to load repos: '
-							+ message);
-				}
-			});
-		}
-	};
-	Stevenson.ext.afterInit(loadRepos);
+	Stevenson.ext.afterInit(function(){
+		Stevenson.ui.Loader.display('Loading organizations...', 100);
+		Stevenson.repo.getOrgs({
+			success: function(orgs){
+				$.each(orgs,function(idx, org){
+					$('.nav-tabs').append('<li><a href="#' + org.login + '">' + org.login + '</a></li>');
+					$('.nav-tabs a[href=#'+org.login+']').click(function(){
+						if($('.tab-pane#'+org.login).html() == ''){
+							$('#'+org.login).append('<h4>'+org.login+'</h4>');
+							loadRepos(org.login);
+						}
+  						$(this).tab('show');
+  						return false;
+  					});
+					$('.repos').append('<div class="tab-pane" id="' + org.login + '"></div>');
+				});
+				Stevenson.ui.Loader.hide();
+				loadRepos();
+				$('.nav-tabs a[href=#mine]').click(function(){
+  					$(this).tab('show');
+  					return false;
+  				});
+			}, 
+			error: function(message){
+				Stevenson.ui.Loader.hide();
+				Stevenson.ui.Messages.displayError('Unable to load groups: '
+						+ message);
+			}
+		});
+	});
 	$(document).ready(function(){
 		$('#branch-modal .btn').click(function(){
 			Stevenson.Account.repo = $('#current-repo').html();
@@ -121,34 +96,6 @@
 			
 			return false;
 		});
-		$('#add-repo').submit(function(){
-			var user = $('#add-repo input[name=owner]').val();
-			var repo = $('#add-repo input[name=repo]').val();
-			Stevenson.repo.getRepo({
-				name: user+"/"+repo,
-				success: function(repo){
-					var name = repo['full_name'];
-					if(repo != null && name != null){
-						if(Stevenson.Account.favoriteRepos.indexOf(name) == -1){
-							Stevenson.Account.favoriteRepos.push(name);
-							Stevenson.Account.save();
-							loadRepos();
-							return false;
-						} else {
-							Stevenson.ui.Messages.displayError('Repository ' +  name + ' is already a favorite');
-						}
-					} else {
-						Stevenson.ui.Messages.displayError('Unable to find repository ' + repo + ' owned by user ' + user);
-						Stevenson.log.warn('Repositoty returned for ' + owner + '/' + repo + ' not valid: '+repo);
-					}
-				},
-				error: function(message){
-					Stevenson.ui.Loader.hide();
-					Stevenson.ui.Messages.displayError('Excepting finding repository: ' + repo + ' owned by user ' + user);
-					Stevenson.log.warn('Received exception ' + message + ' when trying to find repository ' + owner + '/' + repo);
-				}
-			});
-			return false;
-		});
+		
 	});
 })(jQuery);

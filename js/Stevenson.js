@@ -402,6 +402,21 @@ var Stevenson ={
 				}
 			});
 		},
+		getOrgs: function(options) {
+			var settings = $.extend({}, {
+				success: function(repo){},
+				error: function(err){}
+			}, options);
+			var gh = Stevenson.repo.getGitHub(options);
+			var user = gh.getUser();
+			user.orgs(function(err, orgs) {
+				if (err) {
+					settings.error(Stevenson.repo.getErrorMessage(err));
+				} else {
+					settings.success(orgs);
+				}
+			});
+		},
 		getRepo: function(options){
 			var settings = $.extend({}, {
 				success: function(repo){},
@@ -429,13 +444,23 @@ var Stevenson ={
 			}, options);
 			var gh = Stevenson.repo.getGitHub(options);
 			var user = gh.getUser();
-			user.repos(function(err, repos) {
-				if (err) {
-					settings.error(Stevenson.repo.getErrorMessage(err));
-				} else {
-					settings.success(repos);
-				}
-			});
+			if(settings.group && settings.group != ''){
+				user.orgRepos(settings.group, function(err, repos) {
+					if (err) {
+						settings.error(Stevenson.repo.getErrorMessage(err));
+					} else {
+						settings.success(repos);
+					}
+				});
+			} else {
+				user.repos(function(err, repos) {
+					if (err) {
+						settings.error(Stevenson.repo.getErrorMessage(err));
+					} else {
+						settings.success(repos);
+					}
+				});
+			}
 		},
 		login: function(options){
 			var settings = $.extend({}, {

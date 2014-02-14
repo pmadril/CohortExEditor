@@ -1,12 +1,19 @@
 <script id="repo-item" type="text/html">
-	<li class="span3 well" style="{{style}}">
-		<a href="{{name}}" class="open">
+	<div class="span12 well" style="{{style}}" id="{{name}}">
+		<a href="#{{name}}" data-repo="{{name}}" class="open">
 			<strong>{{name}}</strong>
 			<br/>
 			<small>{{description}}</small>
 		</a><br/>
 		<a href="{{name}}" class="favorite">favorite</a>
-	</li>
+	</div>
+</script>
+<script id="org-repos" type="text/html">
+	<div class="tab-content repos">
+		<div class="tab-pane" id="{{name}}">
+			<h4>{{name}}</h4>
+		</div>
+	</div>
 </script>
 <script id="file" type="text/html">
 	<tr data-path="{{path}}" class="{{type}}">
