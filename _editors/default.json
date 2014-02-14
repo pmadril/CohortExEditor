@@ -28,6 +28,12 @@
          "name":"published",
          "type":"checkbox",
          "value": true
+      },
+      {
+         "label":"Authentication Required",
+         "name":"authRequired",
+         "type":"checkbox",
+         "value": false
       }
    ],
    "rte": {
