@@ -13,7 +13,7 @@
 			error:  function(message){
 				Stevenson.ui.Loader.hide();
 				Stevenson.ui.Messages.displayError('Exception loading properties editor: '
-						+ message+', if you haven\' already, <a href="edit-layout.html?layout='+layout+'">configure the editor for this template</a>.');
+						+ message+', if you haven\' already, <a href="/cms/edit.html?new=true#_editors/'+layout+'.json">configure the editor for this template</a>.');
 			}
 		});
 	};
