@@ -516,6 +516,7 @@ var Stevenson ={
 				Stevenson.ui.ContentEditor.currentEditor.configure(config);
 			},
 			setContent: function(page) {
+				$('.content').html('');
 				var editors = Stevenson.ui.ContentEditor.editors;
 				for(var i = 0; i < editors.length; i++) {
 					if(page.path.toLowerCase().match(editors[i].regex)) {
@@ -640,6 +641,7 @@ var Stevenson ={
 		 */
 		Editor : {
 			load : function(config, properties) {
+				$('.fields').html('');
 				$('.properties > legend').html(config.title);
 				$('.properties > p').html(config.description);
 				$.each(config.fields, function(idx, field){

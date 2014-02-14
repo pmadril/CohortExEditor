@@ -17,7 +17,7 @@
 			}
 		});
 	};
-	Stevenson.ext.afterInit(function() {
+	var initialize = function() {
 		Stevenson.log.info('Editing page');
 
 		$.each(Stevenson.repo.layouts, function(index, elem){
@@ -74,7 +74,8 @@
 				}
 			});
 		}
-	});
+	};
+	Stevenson.ext.afterInit(initialize);
 	$(document).ready(function(){
 		$('.save').click(function(){
 			
@@ -97,10 +98,10 @@
 			
 			if(properties){
 				Stevenson.log.debug('Adding Jekyll header');
-				var properties = '---\n';
-				properties += YAML.stringify(properties);
-				properties += '---\n\n';
-				currentPage.content = properties + Stevenson.ui.ContentEditor.getContent(currentPage);
+				var header = '---\n';
+				header += YAML.stringify(properties);
+				header += '---\n\n';
+				currentPage.content = header + Stevenson.ui.ContentEditor.getContent(currentPage);
 			} else {
 				Stevenson.log.debug('Not adding Jekyll header');
 				currentPage.content = Stevenson.ui.ContentEditor.getContent(currentPage);
@@ -118,7 +119,11 @@
 				success: function(){
 					Stevenson.ui.Messages.displayMessage('Page saved successfully!');
 					Stevenson.ui.Loader.hide();
-					window.location.reload();
+					if (Stevenson.util.getParameter('new') == 'true') {
+						window.location.replace('/cms/edit.html#'+currentPage.path);
+					} else {
+						initialize();
+					}
 				}
 			});
 			return false;
