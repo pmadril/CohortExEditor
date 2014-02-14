@@ -1,4 +1,19 @@
 (function($) {
+	var selectBranch = function(){
+		Stevenson.Account.repo = $('#current-repo').html();
+		Stevenson.Account.branch = $('#branches').val();
+		Stevenson.Account.save();
+		Stevenson.repo.getLayouts({
+			success: function(branches){
+				window.location = '/cms/site.html';
+			},
+			error: function(err){
+				Stevenson.ui.Messages.displayError('Unable to load layouts: '
+						+ err);
+			}
+		});
+		return false;
+	};
 	var loadRepos = function(group){
 		Stevenson.ui.Loader.display('Loading repositories...', 100);
 		Stevenson.log.info('Loading repositories for '+group);
@@ -30,7 +45,11 @@
 							});
 							$('#current-repo').html(repo);
 							Stevenson.ui.Loader.hide();
-							$('#branch-modal').modal('show');
+							if(branches.length != 1){
+								$('#branch-modal').modal('show');
+							} else {
+								selectBranch();
+							}
 						},
 						error: function(err){
 							Stevenson.ui.Messages.displayError('Unable to load branches: '
@@ -80,22 +99,6 @@
 		});
 	});
 	$(document).ready(function(){
-		$('#branch-modal .btn').click(function(){
-			Stevenson.Account.repo = $('#current-repo').html();
-			Stevenson.Account.branch = $('#branches').val();
-			Stevenson.Account.save();
-			Stevenson.repo.getLayouts({
-				success: function(branches){
-					window.location = '/cms/site.html';
-				},
-				error: function(err){
-					Stevenson.ui.Messages.displayError('Unable to load layouts: '
-							+ err);
-				}
-			});
-			
-			return false;
-		});
-		
+		$('#branch-modal .btn').click(selectBranch);
 	});
 })(jQuery);
