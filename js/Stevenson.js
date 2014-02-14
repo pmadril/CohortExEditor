@@ -588,17 +588,18 @@ var Stevenson ={
 						$('.content').mustache('page-content-image', {
 							repo: Stevenson.Account.repo,
 							branch: Stevenson.Account.branch,
-							path: page.path
+							path: page.path,
+							date: new Date().getTime()
 						});
 						$('#upload-file-input').change(function(){
 							Stevenson.ui.Loader.display("Uploading file...");
 							var reader = new FileReader();
 							reader.onload = function(e) {
-								page.content = reader.result;
-								Stevenson.ui.Messages.displayMessage("Successfully uploaded file "+name);
+								page.content =  reader.result;
+								Stevenson.ui.Messages.displayMessage("File uploaded successfully");
 								Stevenson.ui.Loader.hide();
 							};
-							reader.readAsBinaryString(document.getElementById('upload-file-input').files[0]);
+							reader.readAsArrayBuffer(document.getElementById('upload-file-input').files[0]);
 						});
 					},
 					getContent: function(page){
@@ -937,12 +938,16 @@ function Page(path, content) {
 			return parts[0];
 		}
 	};
-	this.getProperties = function(){
-		var parts = this.content.split('---');
-		if(parts.length == 3){
-			return YAML.parse(parts[1]);
-		} else {
-			Stevenson.log.warn('No YAML header found');
+	this.getProperties = function() {
+		try{
+			var parts = this.content.split('---');
+			if(parts.length == 3){
+				return YAML.parse(parts[1]);
+			} else {
+				Stevenson.log.warn('No YAML header found');
+			}
+		}catch(e){
+			Stevenson.log.warn('Exception getting YAML Headers: '+e.message);
 		}
 	};
 	this.getType = function() {

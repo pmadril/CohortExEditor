@@ -95,17 +95,16 @@
 				}
 			}
 			
-			var newContent = '';
 			if(properties){
 				Stevenson.log.debug('Adding Jekyll header');
-				newContent += '---\n';
-				newContent += YAML.stringify(properties);
-				newContent += '---\n\n';
+				var properties = '---\n';
+				properties += YAML.stringify(properties);
+				properties += '---\n\n';
+				currentPage.content = properties + Stevenson.ui.ContentEditor.getContent(currentPage);
 			} else {
 				Stevenson.log.debug('Not adding Jekyll header');
+				currentPage.content = Stevenson.ui.ContentEditor.getContent(currentPage);
 			}
-			newContent += Stevenson.ui.ContentEditor.getContent(currentPage);
-			currentPage.content = newContent;
 			
 			Stevenson.repo.savePage({
 				page: currentPage,
@@ -119,6 +118,7 @@
 				success: function(){
 					Stevenson.ui.Messages.displayMessage('Page saved successfully!');
 					Stevenson.ui.Loader.hide();
+					window.location.reload();
 				}
 			});
 			return false;

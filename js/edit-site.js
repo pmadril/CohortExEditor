@@ -256,7 +256,7 @@
 					
 				});
 			}
-			reader.readAsBinaryString(document.getElementById('upload-file-input').files[0]);	
+			reader.readAsArrayBuffer(document.getElementById('upload-file-input').files[0]);	
 			return false;
 		});
 	});
