@@ -44,8 +44,8 @@
 								$('#branches').append('<option value="' + branch + '">'+ branch + '</option>');
 							});
 							$('#current-repo').html(repo);
-							Stevenson.ui.Loader.hide();
 							if(branches.length != 1){
+								Stevenson.ui.Loader.hide();
 								$('#branch-modal').modal('show');
 							} else {
 								selectBranch();
