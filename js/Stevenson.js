@@ -562,8 +562,16 @@ var Stevenson ={
 					regex: '^.+\.(htm|html)$',
 					configure: function(config){
 						var rteConfig = $.extend({
+							relative_urls: false,
 							selector: '#content',
-							plugins: ["advlist autolink link image lists visualblocks code media table contextmenu"],
+    						plugins: [
+    							"advlink autolink lists link image charmap print preview hr anchor pagebreak",
+    							"searchreplace wordcount visualblocks visualchars code fullscreen",
+    							"insertdatetime media nonbreaking save table contextmenu directionality",
+    							"emoticons template paste textcolor"
+    						],
+    						toolbar1: "undo redo | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image media table | code",
+							image_advtab: true,
 							menubar: false
 						}, config.rte);
 						tinymce.init(rteConfig);

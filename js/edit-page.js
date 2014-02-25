@@ -31,7 +31,7 @@
 		
 		var pagePath = window.location.hash.substr(1);
 
-		$('h2').append(pagePath);
+		$('#page-path').html(pagePath);
 		if (Stevenson.util.getParameter('new') == 'true') {
 			Stevenson.log.info('Creating new page');
 			currentPage = new Page(pagePath, '');
@@ -97,48 +97,51 @@
 			}
 			
 			var pageContent = Stevenson.ui.ContentEditor.getContent(currentPage);
-			if(!(/^[\000-\177]*$/.test(pageContent))) {
-				var c = '';
-				for (var i = 0; i < pageContent.length; i++) {
-					if (pageContent.charCodeAt(i) > 127) {
-						c = pageContent.charAt(i);
-						break;
-					}
-				}
-				Stevenson.ui.Messages.displayError('Exception saving page, invalid non-ASCII character: '+c);
-				Stevenson.ui.Loader.hide();
-    		} else {
-				if(properties){
-					Stevenson.log.debug('Adding Jekyll header');
-					var header = '---\n';
-					header += YAML.stringify(properties);
-					header += '---\n\n';
-					currentPage.content = header + pageContent;
-				} else {
-					Stevenson.log.debug('Not adding Jekyll header');
-					currentPage.content = pageContent;
-				}
-		
-				Stevenson.repo.savePage({
-					page: currentPage,
-					path: window.location.hash.substr(1),
-					message: $('#message').val(),
-					error: function(message){
-						Stevenson.ui.Loader.hide();
-						Stevenson.ui.Messages.displayError('Exception saving page: '
-							+ message);
-					},
-					success: function(){
-						Stevenson.ui.Messages.displayMessage('Page saved successfully!');
-						Stevenson.ui.Loader.hide();
-						if (Stevenson.util.getParameter('new') == 'true') {
-							window.location.replace('/cms/edit.html#'+currentPage.path);
-						} else {
-							initialize();
+			if(properties){
+				Stevenson.log.debug('Adding Jekyll header');
+				
+				/* Jekyll Header files need to only be ASCII */
+				if(!(/^[\000-\177]*$/.test(pageContent))) {
+					var c = '';
+					for (var i = 0; i < pageContent.length; i++) {
+						if (pageContent.charCodeAt(i) > 127) {
+							c = pageContent.charAt(i);
+							break;
 						}
 					}
-				});
+					Stevenson.ui.Messages.displayError('Exception saving page, invalid non-ASCII character: '+c);
+					Stevenson.ui.Loader.hide();
+					return false;
+    			}
+				
+				var header = '---\n';
+				header += YAML.stringify(properties);
+				header += '---\n\n';
+				currentPage.content = header + pageContent;
+			} else {
+				Stevenson.log.debug('Not adding Jekyll header');
+				currentPage.content = pageContent;
 			}
+
+			Stevenson.repo.savePage({
+				page: currentPage,
+				path: window.location.hash.substr(1),
+				message: $('#message').val(),
+				error: function(message){
+					Stevenson.ui.Loader.hide();
+					Stevenson.ui.Messages.displayError('Exception saving page: '
+						+ message);
+				},
+				success: function(){
+					Stevenson.ui.Messages.displayMessage('Page saved successfully!');
+					Stevenson.ui.Loader.hide();
+					if (Stevenson.util.getParameter('new') == 'true') {
+						window.location.replace('/cms/edit.html#'+currentPage.path);
+					} else {
+						initialize();
+					}
+				}
+			});
 			return false;
 		});
 	});
