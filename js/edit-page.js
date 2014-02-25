@@ -96,15 +96,20 @@
 				}
 			}
 			
+			var pageContent = Stevenson.ui.ContentEditor.getContent(currentPage);
+			if(!(/^[a-zA-Z0-9._\-]*$/.test(pageContent))) {
+				alert("Invalid non-ASCII characters found");
+    		}
+			
 			if(properties){
 				Stevenson.log.debug('Adding Jekyll header');
 				var header = '---\n';
 				header += YAML.stringify(properties);
 				header += '---\n\n';
-				currentPage.content = header + Stevenson.ui.ContentEditor.getContent(currentPage);
+				currentPage.content = header + pageContent;
 			} else {
 				Stevenson.log.debug('Not adding Jekyll header');
-				currentPage.content = Stevenson.ui.ContentEditor.getContent(currentPage);
+				currentPage.content = pageContent;
 			}
 			
 			Stevenson.repo.savePage({
