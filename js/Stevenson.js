@@ -565,7 +565,7 @@ var Stevenson ={
 							relative_urls: false,
 							selector: '#content',
     						plugins: [
-    							"advlink autolink lists link image charmap print preview hr anchor pagebreak",
+    							"autolink lists link image charmap print preview hr anchor pagebreak",
     							"searchreplace wordcount visualblocks visualchars code fullscreen",
     							"insertdatetime media nonbreaking save table contextmenu directionality",
     							"emoticons template paste textcolor"
