@@ -1,4 +1,5 @@
 *.sw*
 _site/
-/.project
-/.settings
+.project
+.settings
+.DS_Store
