@@ -98,39 +98,40 @@
 			
 			var pageContent = Stevenson.ui.ContentEditor.getContent(currentPage);
 			if(!(/^[a-zA-Z0-9._\-]*$/.test(pageContent))) {
-				alert("Invalid non-ASCII characters found");
-    		}
-			
-			if(properties){
-				Stevenson.log.debug('Adding Jekyll header');
-				var header = '---\n';
-				header += YAML.stringify(properties);
-				header += '---\n\n';
-				currentPage.content = header + pageContent;
-			} else {
-				Stevenson.log.debug('Not adding Jekyll header');
-				currentPage.content = pageContent;
-			}
-			
-			Stevenson.repo.savePage({
-				page: currentPage,
-				path: window.location.hash.substr(1),
-				message: $('#message').val(),
-				error: function(message){
-					Stevenson.ui.Loader.hide();
-					Stevenson.ui.Messages.displayError('Exception saving page: '
-							+ message);
-				},
-				success: function(){
-					Stevenson.ui.Messages.displayMessage('Page saved successfully!');
-					Stevenson.ui.Loader.hide();
-					if (Stevenson.util.getParameter('new') == 'true') {
-						window.location.replace('/cms/edit.html#'+currentPage.path);
-					} else {
-						initialize();
-					}
+				Stevenson.ui.Messages.displayError('Exception saving page: Invalid non-ASCII characters');
+				Stevenson.ui.Loader.hide();
+    		} else {
+				if(properties){
+					Stevenson.log.debug('Adding Jekyll header');
+					var header = '---\n';
+					header += YAML.stringify(properties);
+					header += '---\n\n';
+					currentPage.content = header + pageContent;
+				} else {
+					Stevenson.log.debug('Not adding Jekyll header');
+					currentPage.content = pageContent;
 				}
-			});
+		
+				Stevenson.repo.savePage({
+					page: currentPage,
+					path: window.location.hash.substr(1),
+					message: $('#message').val(),
+					error: function(message){
+						Stevenson.ui.Loader.hide();
+						Stevenson.ui.Messages.displayError('Exception saving page: '
+							+ message);
+					},
+					success: function(){
+						Stevenson.ui.Messages.displayMessage('Page saved successfully!');
+						Stevenson.ui.Loader.hide();
+						if (Stevenson.util.getParameter('new') == 'true') {
+							window.location.replace('/cms/edit.html#'+currentPage.path);
+						} else {
+							initialize();
+						}
+					}
+				});
+			}
 			return false;
 		});
 	});
