@@ -97,8 +97,15 @@
 			}
 			
 			var pageContent = Stevenson.ui.ContentEditor.getContent(currentPage);
-			if(!(/^[a-zA-Z0-9._\-]*$/.test(pageContent))) {
-				Stevenson.ui.Messages.displayError('Exception saving page: Invalid non-ASCII characters');
+			if(!(/^[\000-\177]*$/.test(pageContent))) {
+				var c = '';
+				for (var i = 0; i < pageContent.length; i++) {
+					if (pageContent.charCodeAt(i) > 127) {
+						c = pageContent.charAt(i);
+						break;
+					}
+				}
+				Stevenson.ui.Messages.displayError('Exception saving page, invalid non-ASCII character: '+c);
 				Stevenson.ui.Loader.hide();
     		} else {
 				if(properties){
