@@ -27,7 +27,7 @@ var Stevenson ={
 		 * Loads the account information from Local Storage
 		 */
 		load : function() {
-			var acct = Stevenson.ls.get('Stevenson.repo.Account');
+			var acct = Stevenson.session.get('Stevenson.repo.Account');
 			if(acct != null && acct.authenticated){
 				$.extend(Stevenson.Account, acct);
 			}
@@ -36,7 +36,7 @@ var Stevenson ={
 		 * Saves the account information to Local Storage
 		 */
 		save : function() {
-			Stevenson.ls.set('Stevenson.repo.Account', Stevenson.Account);
+			Stevenson.session.set('Stevenson.repo.Account', Stevenson.Account);
 		}
 	},
 	ext: {
@@ -79,7 +79,7 @@ var Stevenson ={
 
 		// Start up the account
 		Stevenson.Account.load();
-		Stevenson.repo.layouts = Stevenson.ls.get("Stevenson.repo.layouts");
+		Stevenson.repo.layouts = Stevenson.session.get("Stevenson.repo.layouts");
 		
 		
 		Stevenson.log.debug('Checking to see if need to login');
@@ -134,46 +134,8 @@ var Stevenson ={
 		}
 	},
 	/**
-	 * Wrapper for localstorage, allows for getting and setting Objects.
+	 *  Wrapper for the GitHub Repository
 	 */
-	ls: {
-		/**
-		 * Gets a value or object from LocalStorage
-		 */
-		get : function(key) {
-			if (localStorage.getItem(key + '.isObj')
-					&& localStorage.getItem(key + '.isObj') == "true") {
-				return JSON.parse(localStorage.getItem(key));
-			} else {
-				return localStorage.getItem(key);
-			}
-		},
-		/**
-		 * Checks to see if LocalStorage contains a value for the key.
-		 */
-		has : function(key) {
-			return localStorage.hasOwnProperty(key);
-		},
-		/**
-		 * Removes the value for the key from LocalStorage
-		 */
-		remove : function(key) {
-			return localStorage.removeItem(key);
-		},
-		/**
-		 * Persists the value or object into LocalStorage
-		 */
-		set : function(key, value) {
-			var toSet = value;
-			if (typeof value == 'object') {
-				toSet = JSON.stringify(value);
-				localStorage.setItem(key + '.isObj', true);
-			} else {
-				localStorage.setItem(key + '.isObj', false);
-			}
-			localStorage.setItem(key, toSet);
-		}
-	},
 	repo: {
 		layouts: [],
 		copyFile: function(options){
@@ -367,7 +329,7 @@ var Stevenson ={
 						};
 					}
 					Stevenson.repo.layouts = layouts;
-					Stevenson.ls.set("Stevenson.repo.layouts", layouts);
+					Stevenson.session.set("Stevenson.repo.layouts", layouts);
 					settings.success(layouts);
 				};
 			});
@@ -532,6 +494,47 @@ var Stevenson ={
 		}
 	},
 	/**
+	 * Wrapper for sessionStorage, allows for getting and setting Objects.
+	 */
+	session: {
+		/**
+		 * Gets a value or object from LocalStorage
+		 */
+		get : function(key) {
+			if (sessionStorage.getItem(key + '.isObj')
+					&& sessionStorage.getItem(key + '.isObj') == "true") {
+				return JSON.parse(sessionStorage.getItem(key));
+			} else {
+				return sessionStorage.getItem(key);
+			}
+		},
+		/**
+		 * Checks to see if sessionStorage contains a value for the key.
+		 */
+		has : function(key) {
+			return sessionStorage.hasOwnProperty(key);
+		},
+		/**
+		 * Removes the value for the key from sessionStorage
+		 */
+		remove : function(key) {
+			return sessionStorage.removeItem(key);
+		},
+		/**
+		 * Persists the value or object into sessionStorage
+		 */
+		set : function(key, value) {
+			var toSet = value;
+			if (typeof value == 'object') {
+				toSet = JSON.stringify(value);
+				sessionStorage.setItem(key + '.isObj', true);
+			} else {
+				sessionStorage.setItem(key + '.isObj', false);
+			}
+			sessionStorage.setItem(key, toSet);
+		}
+	},
+	/**
 	 * User interface methods.
 	 */
 	ui: {
@@ -546,6 +549,7 @@ var Stevenson ={
 				for(var i = 0; i < editors.length; i++) {
 					if(page.path.toLowerCase().match(editors[i].regex)) {
 						Stevenson.ui.ContentEditor.currentEditor = editors[i];
+						Stevenson.log.debug('Using editor ' + editors[i].name);
 						break;
 					}
 				}
@@ -585,7 +589,7 @@ var Stevenson ={
 				},
 				{
 					name: 'text',
-					regex: '^.+\.(json|yaml|css|js|txt)$',
+					regex: '^.?\.(json|yaml|css|js|txt|gitignore|xml|php)$',
 					configure: function(config){
 					},
 					setContent: function(page){
@@ -646,7 +650,7 @@ var Stevenson ={
 					configure: function(config){
 					},
 					setContent: function(page){
-						$('.content').mustache('page-content-image', {
+						$('.content').mustache('page-content-binary', {
 							repo: Stevenson.Account.repo,
 							branch: Stevenson.Account.branch,
 							path: page.path
