@@ -431,7 +431,7 @@ var Stevenson ={
 				}, options);
 			var gh = Stevenson.repo.getGitHub();
 			var user = gh.getUser();
-			user.show(null, function(err, content) {
+			user.show(null, function(err, user) {
 				if (err) {
 					Stevenson.log.debug('Login failed');
 					Stevenson.Account.clear();
@@ -439,9 +439,10 @@ var Stevenson ={
 				} else {
 					Stevenson.log.debug('Login successsful');
 					Stevenson.Account.authenticated = true;
-					Stevenson.Account.name = content.name;
+					Stevenson.Account.name = user.name;
 					Stevenson.Account.save();
-					settings.success(content);
+					Stevenson.session.set('user',user);
+					settings.success(user);
 				}
 			});
 		},

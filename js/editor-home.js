@@ -1,4 +1,18 @@
 (function($) {
+	var filterRepos = function(id){
+		var filter = $('#'+id+'-filter input').val().toLowerCase();
+		if(filter == '') {
+			$('.tab-pane#'+ id +' .repo').show();
+		} else {
+			$('.tab-pane#'+ id +' .repo').each(function(idx,elem){
+				if($(elem).attr('id').toLowerCase().indexOf(filter) != -1) {
+					$(elem).show();
+				} else {
+					$(elem).hide();
+				}
+			});
+		}
+	};
 	var selectBranch = function(){
 		Stevenson.Account.repo = $('#current-repo').html();
 		Stevenson.Account.branch = $('#branches').val();
@@ -79,23 +93,9 @@
 							$('#'+org.login).mustache('org-header', org);
 							loadRepos(org.login);
 							var filterRepo = function(){
-								var filter = $('#'+org.login+'-filter input').val().toLowerCase();
-								if(filter == '') {
-									$('.tab-pane#'+org.login +' .repo').show();
-								} else {
-									$('.tab-pane#'+org.login +' .repo').each(function(idx,elem){
-										if($(elem).attr('id').toLowerCase().indexOf(filter) != -1) {
-											$(elem).show();
-										} else {
-											$(elem).hide();
-										}
-									});
-								}
+								filterRepos(org.login);
 							};
-							$('#'+org.login+'-filter input').change(filterRepo);
-							$('#'+org.login+'-filter input').keyup(filterRepo);
-							$('#'+org.login+'-filter input').click(filterRepo);
-							$('#'+org.login+'-filter input').focusout(filterRepo);
+							$('#'+org.login+'-filter input').change(filterRepo).keyup(filterRepo).click(filterRepo).focusout(filterRepo);
 						}
   						$(this).tab('show');
   						return false;
@@ -115,6 +115,13 @@
 						+ message);
 			}
 		});
+		var user = Stevenson.session.get('user');
+		$('#user-avatar').attr('src',user['avatar_url']);
+		var filterRepo = function(){
+			filterRepos('mine');
+		};
+		$('#mine-filter input').change(filterRepo).keyup(filterRepo).click(filterRepo).focusout(filterRepo);
+		
 	});
 	$(document).ready(function(){
 		$('#branch-modal .btn').click(selectBranch);

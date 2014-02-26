@@ -13,7 +13,12 @@ scripts: [/js/editor-home.js]
 </ul>
 <div class="tab-content repos">
 	<div class="tab-pane active" id="mine">
+		<img src="" class="img-polaroid org-avatar" id="user-avatar"/>
 		<h4>My Repositories</h4>
+		<form id="mine-filter" class="form-inline">
+			<input type="text" name="filter" placeholder="Filter..." />
+		</form>
+		<hr class="clear" />
 	</div>
 </div>
 <div id="branch-modal" class="modal hide">
