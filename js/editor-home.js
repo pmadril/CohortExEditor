@@ -79,12 +79,12 @@
 							$('#'+org.login).mustache('org-header', org);
 							loadRepos(org.login);
 							var filterRepo = function(){
-								var filter = $('#'+org.login+'-filter input').val();
+								var filter = $('#'+org.login+'-filter input').val().toLowerCase();
 								if(filter == '') {
 									$('.tab-pane#'+org.login +' .repo').show();
 								} else {
 									$('.tab-pane#'+org.login +' .repo').each(function(idx,elem){
-										if($(elem).attr('id').indexOf(filter) != -1) {
+										if($(elem).attr('id').toLowerCase().indexOf(filter) != -1) {
 											$(elem).show();
 										} else {
 											$(elem).hide();
