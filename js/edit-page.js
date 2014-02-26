@@ -123,10 +123,14 @@
 				currentPage.content = pageContent;
 			}
 
+			var message = $('#message').val();
+			if(message == ''){
+				message = 'Updating '+window.location.hash.substr(1);
+			}
 			Stevenson.repo.savePage({
 				page: currentPage,
 				path: window.location.hash.substr(1),
-				message: $('#message').val(),
+				message: message,
 				error: function(message){
 					Stevenson.ui.Loader.hide();
 					Stevenson.ui.Messages.displayError('Exception saving page: '
