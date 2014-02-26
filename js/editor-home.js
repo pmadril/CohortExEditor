@@ -76,8 +76,26 @@
 					$('.nav-tabs').append('<li><a href="#' + org.login + '">' + org.login + '</a></li>');
 					$('.nav-tabs a[href=#'+org.login+']').click(function(){
 						if($('.tab-pane#'+org.login).html() == ''){
-							$('#'+org.login).append('<h4>'+org.login+'</h4>');
+							$('#'+org.login).mustache('org-header', org);
 							loadRepos(org.login);
+							var filterRepo = function(){
+								var filter = $('#'+org.login+'-filter input').val();
+								if(filter == '') {
+									$('.tab-pane#'+org.login +' .repo').show();
+								} else {
+									$('.tab-pane#'+org.login +' .repo').each(function(idx,elem){
+										if($(elem).attr('id').indexOf(filter) != -1) {
+											$(elem).show();
+										} else {
+											$(elem).hide();
+										}
+									});
+								}
+							};
+							$('#'+org.login+'-filter input').change(filterRepo);
+							$('#'+org.login+'-filter input').keyup(filterRepo);
+							$('#'+org.login+'-filter input').click(filterRepo);
+							$('#'+org.login+'-filter input').focusout(filterRepo);
 						}
   						$(this).tab('show');
   						return false;

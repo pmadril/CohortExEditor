@@ -5,6 +5,10 @@ body {
 }
 }
 
+.clear {
+	clear:both;
+}
+
 .folder-close {
 	cursor: pointer
 }
@@ -20,6 +24,14 @@ body {
 
 .navbar img {
 	border-radius: 2px;
+}
+
+.org-avatar {
+	float: left;
+	margin-right: 10px;
+	margin-bottom: 10px;
+	width: 100px;
+	height: 100px;
 }
 
 #your-repos-container li, #favorite-repos-container li, .list-unstyled li {

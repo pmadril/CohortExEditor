@@ -1,5 +1,5 @@
 <script id="repo-item" type="text/html">
-	<div class="span12 well" style="{{style}}" id="{{name}}">
+	<div class="span12 well repo" style="{{style}}" id="{{name}}">
 		<a href="#{{name}}" data-repo="{{name}}" class="open">
 			<strong>{{name}}</strong>
 			<br/>
@@ -8,12 +8,6 @@
 		<a href="{{name}}" class="favorite">favorite</a>
 	</div>
 </script>
-<script id="org-repos" type="text/html">
-	<div class="tab-content repos">
-		<div class="tab-pane" id="{{name}}">
-			<h4>{{name}}</h4>
-		</div>
-	</div>
 </script>
 <script id="file" type="text/html">
 	<tr data-path="{{path}}" class="{{type}}">
@@ -54,11 +48,17 @@
 	<legend>Upload New</legend>
 	<input type="file" id="upload-file-input" />
 </script>
+<script id="org-header" type="text/html">
+	<img src="{{avatar_url}}" class="img-polaroid org-avatar"/>
+	<h4><a href="{{ url }}">{{ login }}</a></h4>
+	<form id="{{ login }}-filter" class="form-inline">
+		<input type="text" name="filter" placeholder="Filter..." />
+	</form>
+	<hr class="clear" />
+</script>
 <script id="page-content-image" type="text/html">
 	<legend>File Content</legend>
 	<img id="preview-img" src="https://github.com/{{repo}}/blob/{{branch}}/{{path}}?raw=true&tstamp={{date}}" />
 	<legend>Upload New</legend>
 	<input type="file" id="upload-file-input" />
 </script>
-
-
