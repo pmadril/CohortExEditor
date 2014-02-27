@@ -147,6 +147,7 @@
 					if (Stevenson.util.getParameter('new') == 'true') {
 						window.location.replace('/cms/edit.html#'+currentPage.path);
 					} else {
+						$('#message').val('');
 						initialize();
 					}
 				}
