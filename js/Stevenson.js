@@ -590,7 +590,7 @@ var Stevenson ={
 				},
 				{
 					name: 'text',
-					regex: '^.?\.(json|yaml|css|js|txt|gitignore|xml|php)$',
+					regex: '^.+\.(json|yaml|css|js|txt|gitignore|xml|php)$',
 					configure: function(config){
 					},
 					setContent: function(page){
@@ -694,15 +694,23 @@ var Stevenson ={
 				});
 			},
 			save : function(config, properties){
-				$.each(config.fields, function(idx, field){
+				var succeeded = true;
+				for(var i=0;i<config.fields.length;i++){
+					var field = config.fields[i];
 					if(Stevenson.ui.Editor.types[field.type]) {
 						Stevenson.log.debug('Saving field '+field.name+' of type '+ field.type);
 						Stevenson.ui.Editor.types[field.type].save(field, properties);
+						if(field.required 
+								&& (!properties.hasOwnProperty(field.name) || properties[field.name] == '')){
+							Stevenson.ui.Messages.displayError('Please fill out required field '+field.label);
+							succeeded = false;
+						}
 					} else {
 						Stevenson.ui.Messages.displayError('Unable to find editor for: '
 								+ field.type);
 					}
-				});
+				}
+				return succeeded;
 			},
 			types : {
 				checkbox: {

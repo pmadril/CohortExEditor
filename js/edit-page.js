@@ -79,6 +79,7 @@
 	$(document).ready(function(){
 		$('.save').click(function(){
 			
+			window.scrollTo(0,0);
 			Stevenson.ui.Loader.display('Saving page...', 100);
 			
 			var properties = currentPage.getProperties();
@@ -87,7 +88,11 @@
 			var title = $('#title').val();
 			if(properties) {
 				properties.layout = layout;
-				Stevenson.ui.Editor.save(editorConfig, properties);
+				if(!Stevenson.ui.Editor.save(editorConfig, properties)){
+					Stevenson.log.info('Unable to save changes due to validation errors');
+					Stevenson.ui.Loader.hide();
+					return false;
+				}
 			} else {
 				if(layout != ''){
 					properties = {};
