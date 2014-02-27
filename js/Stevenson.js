@@ -711,7 +711,7 @@ var Stevenson ={
 							container.append('<label class="control-label" for="'+field.name+'">'+field.label+'</label>');
 						}
 						var checked = (properties[field.name] === true);
-						if(field.value == true && !(properties[field.name])){
+						if(field.value === true && !properties.hasOwnProperty(field.name)){
 							checked = true;
 						}
 						var html = '<div class="controls"><input type="checkbox" name="'+field.name+'" ' + (checked ? 'checked="checked"' : '') + ' /></div>';
