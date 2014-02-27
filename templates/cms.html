@@ -1,7 +1,9 @@
 <script id="repo-item" type="text/html">
-	<div class="span12 well repo" style="{{style}}" id="{{name}}">
-		<a href="#{{name}}" data-repo="{{name}}" class="open">
-			<strong>{{name}}</strong>
+	<div class="span12 well repo" style="{{style}}" id="{{full_name}}">
+		<a href="#{{full_name}}" data-repo="{{full_name}}" class="open">
+			<strong>{{#permissions}}
+				<i class="icon-pencil"></i>&nbsp;
+			{{/permissions}} {{full_name}}</strong>
 			<br/>
 			<small>{{description}}</small>
 		</a>
@@ -49,7 +51,7 @@
 </script>
 <script id="org-header" type="text/html">
 	<img src="{{avatar_url}}" class="img-polaroid org-avatar"/>
-	<h4><a href="{{ url }}">{{ login }}</a></h4>
+	<h4><a href="https://github.com/{{ login }}" target="_blank">{{ login }}</a></h4>
 	<form id="{{ login }}-filter" class="form-inline">
 		<input type="text" name="filter" placeholder="Filter..." />
 	</form>

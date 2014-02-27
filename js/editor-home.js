@@ -39,11 +39,7 @@
 					container = $('.tab-content #'+group);
 				}
 				$.each(repos, function(index, repo) {
-					var data = {
-						name: repo['full_name'],
-						description: repo['description']
-					};
-					container.mustache('repo-item', data);
+					container.mustache('repo-item', repo);
 				});
 				Stevenson.ui.Loader.hide();
 				container.find('a.open').click(function(){
