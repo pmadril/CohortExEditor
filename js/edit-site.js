@@ -58,7 +58,7 @@
 		/**
 		 * Support creating new files
 		 */
-		$('#new-file-modal .yes').click(function() {
+		$('form#new-file').submit(function() {
 			$('#new-file-modal .modal-body .alert-error').remove();
 			var name = $('#file-name').val();
 			if(name != ''){
@@ -87,6 +87,7 @@
 				$('#new-file-name').addClass('error');
 				$('#file-name-modal .modal-body').prepend('<div class="alert alert-error">Please enter a file name.</div>');
 			}
+			return false;
 		});
 		$('#new-file-modal .no').click(function() {
 			$('#new-file-modal').modal('hide');

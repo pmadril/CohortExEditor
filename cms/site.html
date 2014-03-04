@@ -83,9 +83,11 @@ scripts: [/js/edit-site.js]
 		<h3>New File</h3>
 	</div>
 	<div class="modal-body">
-		<label for="file-name">File Name</label>
-		<input type="text" id="file-name" /><br/>
-		<a href="javascript:void(0);" class="btn cancel no">Cancel</a>&nbsp;<a href="#" class="btn btn-success yes">Create File &gt;</a>
+		<form id="new-file">
+			<label for="file-name">File Name</label>
+			<input type="text" id="file-name" /><br/>
+			<a href="javascript:void(0);" class="btn cancel no">Cancel</a>&nbsp;<input type="submit" class="btn btn-success yes" value="Create File &gt;" />
+		</form>
 	</div>
 </div>
 <div id="move-modal" class="modal hide">
