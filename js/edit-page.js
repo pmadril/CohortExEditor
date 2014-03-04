@@ -30,8 +30,7 @@
 		}
 		
 		var pagePath = window.location.hash.substr(1);
-
-		$('#page-path').html(pagePath);
+		$('#page-path').val(pagePath);
 		if (Stevenson.util.getParameter('new') == 'true') {
 			Stevenson.log.info('Creating new page');
 			currentPage = new Page(pagePath, '');
@@ -77,6 +76,27 @@
 	};
 	Stevenson.ext.afterInit(initialize);
 	$(document).ready(function(){
+		$('#rename-page').submit(function(){
+			Stevenson.ui.Loader.display('Renaming page...',100);
+			var oldPath = window.location.hash.substr(1);
+			var newPath = $('#page-path').val()
+			Stevenson.repo.moveFile({
+				oldPath: oldPath,
+				newPath: newPath,
+				success: function(path){
+					window.location.replace('/cms/edit.html#'+newPath);
+					initialize();
+					Stevenson.ui.Messages.displayMessage("Moved file: " + oldPath +' to ' + newPath);
+					Stevenson.ui.Loader.hide();
+				},
+				error: function(message){
+					Stevenson.ui.Messages.displayError("Failed to move file from '"+oldPath+"' to '"+newPath+"' due to error "+message);
+					Stevenson.ui.Loader.hide();
+				}
+			});
+			return false;
+		});
+	
 		$('.save').click(function(){
 			
 			window.scrollTo(0,0);

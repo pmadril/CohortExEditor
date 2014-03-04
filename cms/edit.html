@@ -6,7 +6,9 @@ scripts: [/js/yaml.js, /js/tinymce/tinymce.min.js, /js/edit-page.js, /js/epicedi
 ---
 
 <a href="javascript:window.history.back()" class="cancel">&lt; Back</a>
-<h2>Editing <span id="page-path"></span></h2>
+<form id="rename-page" class="form-inline">
+	<h2>Editing <input id="page-path" type="text" />&nbsp;<input value="Rename" type="submit" class="btn btn-success" /></h2>
+</form>
 <form id="edit-page" class="form-horizontal">
 	<fieldset class="container properties">
 		<legend></legend>
@@ -22,7 +24,6 @@ scripts: [/js/yaml.js, /js/tinymce/tinymce.min.js, /js/edit-page.js, /js/epicedi
 		</div>
 	</fieldset>
 	<fieldset class="container content">
-		
 	</fieldset>
 	<fieldset class="container buttons">
 		<legend>Controls</legend>
