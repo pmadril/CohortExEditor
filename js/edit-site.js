@@ -1,4 +1,11 @@
 (function($) {
+	function bytesToSize(bytes) {
+		var k = 1000;
+		var sizes = ['B', 'KB', 'MB', 'GB', 'TB'];
+		if (bytes === 0) return '0 Bytes';
+		var i = parseInt(Math.floor(Math.log(bytes) / Math.log(k)),10);
+		return (bytes / Math.pow(k, i)).toPrecision(3) + ' ' + sizes[i];
+	}
 	var loadFiles = function(path){
 		Stevenson.ui.Loader.display('Loading files...', 100);
 		
@@ -11,6 +18,7 @@
 				$('#files tbody').html('');
 				$.each(files, function(index, file){
 					if(file.path.indexOf('_config') != 0 && file.path.indexOf('_layouts') != 0 && file.path.indexOf('_editors') != 0){
+						file.size = file.size ? bytesToSize(file.size) : '';
 						$('#files tbody').mustache('file', file);
 					}
 				});
