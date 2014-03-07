@@ -68,44 +68,43 @@ var Stevenson ={
 		});
 		
 		Stevenson.log.debug("Loading the global CMS template");
-		$.Mustache.load('/templates/cms.html');
-		
-		Stevenson.log.info('Initializing application');
+		$.Mustache.load('/templates/cms.html').done(function(){		
+			Stevenson.log.info('Initializing application');
 	
-		// Pre-start checks
-		if (!localStorage) {
-			alert('Your browser is not supported!  Please use a supported browser.');
-		}
+			// Pre-start checks
+			if (!localStorage) {
+				alert('Your browser is not supported!  Please use a supported browser.');
+			}
 
-		// Start up the account
-		Stevenson.Account.load();
-		Stevenson.repo.layouts = Stevenson.session.get("Stevenson.repo.layouts");
+			// Start up the account
+			Stevenson.Account.load();
+			Stevenson.repo.layouts = Stevenson.session.get("Stevenson.repo.layouts");
 		
-		
-		Stevenson.log.debug('Checking to see if need to login');
-		if (Stevenson.loginRequired && Stevenson.Account.authenticated == false) {
-			$('#login-modal').modal({
-				backdrop: 'static',
-				keyboard: false,
-				show: true
-			});
-		}else{
-			if (Stevenson.Account.authenticated && Stevenson.Account.authenticated == true) {
-				Stevenson.log.debug("Adding logged in top section");
-				$.Mustache.load('/templates/authentication.html').done(function () {
-					$('#top-login').html('');
-					$('#top-login').mustache('top-bar', {name: Stevenson.Account.name});
+			Stevenson.log.debug('Checking to see if need to login');
+			if (Stevenson.loginRequired && Stevenson.Account.authenticated == false) {
+				$('#login-modal').modal({
+					backdrop: 'static',
+					keyboard: false,
+					show: true
+				});
+			}else{
+				if (Stevenson.Account.authenticated && Stevenson.Account.authenticated == true) {
+					Stevenson.log.debug("Adding logged in top section");
+					$.Mustache.load('/templates/authentication.html').done(function () {
+						$('#top-login').html('');
+						$('#top-login').mustache('top-bar', {name: Stevenson.Account.name});
+					});
+				}
+				Stevenson.log.debug("Calling after Init methods");
+				$.each(Stevenson.ext.getMethods('afterInit'), function(index, initMethod) {
+					try {
+						initMethod();
+					} catch (e) {
+						Stevenson.log.error('Exception calling method ' + initMethod, e);
+					}
 				});
 			}
-			Stevenson.log.debug("Calling after Init methods");
-			$.each(Stevenson.ext.getMethods('afterInit'), function(index, initMethod) {
-				try {
-					initMethod();
-				} catch (e) {
-					Stevenson.log.error('Exception calling method ' + initMethod, e);
-				}
-			});
-		}
+		});
 	},
 	log: {
 		debug : function() {

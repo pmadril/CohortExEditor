@@ -9,7 +9,6 @@
 		</a>
 	</div>
 </script>
-</script>
 <script id="file" type="text/html">
 	<tr data-path="{{path}}" class="{{type}}">
 		<td>
@@ -34,6 +33,8 @@
 		<a href="{{ editorurl }}" class="btn">Edit Dialog</a>
 	</li>
 </script>
+
+<!-- Page Content Editors -->
 <script id="page-content-textarea" type="text/html">
 	<legend>Page Content</legend>
 	<textarea id="content" rows="20" style="width:100%" placeholder="Write your page...">{{content}}</textarea><br/>
@@ -62,4 +63,20 @@
 	<img id="preview-img" src="https://github.com/{{repo}}/blob/{{branch}}/{{path}}?raw=true&tstamp={{date}}" />
 	<legend>Upload New</legend>
 	<input type="file" id="upload-file-input" />
+</script>
+
+<!-- Modals -->
+<script id="new-file" type="text/html">
+	<div id="new-file-modal" class="modal">
+		<div class="modal-header">
+			<h3>New File</h3>
+		</div>
+		<div class="modal-body">
+			<form id="new-file">
+				<label for="file-name">File Name</label>
+				<input type="text" id="file-name" /><br/>
+				<a href="javascript:void(0);" class="btn cancel no">Cancel</a>&nbsp;<input type="submit" class="btn btn-success yes" value="Create File &gt;" />
+			</form>
+		</div>
+	</div>
 </script>

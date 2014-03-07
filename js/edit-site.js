@@ -15,7 +15,7 @@
 					}
 				});
 				$('.folder-close').click(function(){
-					loadFiles($(this).attr('data-path'));
+					window.location.hash = $(this).attr('data-path');
 				});
 				$('#files .file').click(function(){
 					$('#files input[type=checkbox]').each(function(index, item){
@@ -55,46 +55,58 @@
 	});
 	$(document).ready(function(){
 		
+		/*
+		 * Listen for the hash to change
+		 */
+		window.addEventListener("hashchange", function(){
+			var path = window.location.hash;
+			if(path != ''){
+				path = path.substr(1);
+			}
+			loadFiles(path);
+		}, false);
+		
 		/**
 		 * Support creating new files
 		 */
-		$('form#new-file').submit(function() {
-			$('#new-file-modal .modal-body .alert-error').remove();
-			var name = $('#file-name').val();
-			if(name != ''){
-				var path = $('#files').attr('data-path');
-				var filePath = path + "/" + name;
-				if(path == ""){
-					filePath = name;
-				}
-				$('#new-file-modal .btn, #new-file-modal input').attr('disabled','disabled');
-				Stevenson.repo.savePage({
-					path: filePath,
-					page: {
-						content:''
-						},
-					message: 'Creating new page ' + name,
-					success: function(){
-						window.location = '/cms/edit.html?new=true#'+filePath;
-					},
-					error: function(msg){
-						$('#new-file-modal .btn, #new-file-modal input').removeAttr('disabled');
-						$('#new-file-name').addClass('error');
-						$('#new-file-modal .modal-body').prepend('<div class="alert alert-error">Error creating page: '+msg+'.</div>');
-					}
-				});
-			} else {
-				$('#new-file-name').addClass('error');
-				$('#file-name-modal .modal-body').prepend('<div class="alert alert-error">Please enter a file name.</div>');
-			}
-			return false;
-		});
-		$('#new-file-modal .no').click(function() {
-			$('#new-file-modal').modal('hide');
-		});
-		$('.new').click(function(){
+		$('.main-menu .new').click(function(){
+			$('body').mustache('new-file', {});
 			$('#new-file-modal').modal({
 				show: true
+			});
+			$('#new-file-modal .no').click(function() {
+				$('#new-file-modal').remove();
+			});
+			$('form#new-file').submit(function() {
+				$('#new-file-modal .modal-body .alert-error').remove();
+				var name = $('#file-name').val();
+				if(name != ''){
+					var path = $('#files').attr('data-path');
+					var filePath = path + "/" + name;
+					if(path == ""){
+						filePath = name;
+					}
+					$('#new-file-modal .btn, #new-file-modal input').attr('disabled','disabled');
+					Stevenson.repo.savePage({
+						path: filePath,
+						page: {
+							content:''
+						},
+						message: 'Creating new page ' + name,
+						success: function(){
+							window.location = '/cms/edit.html?new=true#'+filePath;
+						},
+						error: function(msg){
+							$('#new-file-modal .btn, #new-file-modal input').removeAttr('disabled');
+							$('#new-file-name').addClass('error');
+							$('#new-file-modal .modal-body').prepend('<div class="alert alert-error">Error creating page: '+msg+'.</div>');
+						}
+					});
+				} else {
+					$('#new-file-name').addClass('error');
+					$('#file-name-modal .modal-body').prepend('<div class="alert alert-error">Please enter a file name.</div>');
+				}
+				return false;
 			});
 		});
 		
