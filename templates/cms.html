@@ -33,6 +33,21 @@
 		<a href="{{ editorurl }}" class="btn">Edit Dialog</a>
 	</li>
 </script>
+<script id="history-item" type="text/html">
+	<hr/>
+	<dl class="dl-horizontal">
+		<dt>Author</dt>
+		<dd>
+			<a href="{{ author.html_url }}">
+				{{ author.login }}
+			</a>
+		</dd>
+		<dt>Date</dt>
+		<dd>{{ commit.author.date }}</dd>
+		<dt>Message</dt>
+		<dd>{{ commit.message }}</dd>
+	</dl>
+</script>
 
 <!-- Page Content Editors -->
 <script id="page-content-textarea" type="text/html">
@@ -77,6 +92,20 @@
 				<input type="text" id="file-name" /><br/>
 				<a href="javascript:void(0);" class="btn cancel no">Cancel</a>&nbsp;<input type="submit" class="btn btn-success yes" value="Create File &gt;" />
 			</form>
+		</div>
+	</div>
+</script>
+<script id="history" type="text/html">
+	<div id="history-modal" class="modal">
+		<div class="modal-header">
+			<h3>History for {{ file }}</h3>
+		</div>
+		<div class="modal-body">
+			<div class="history-container">
+			</div>
+		</div>
+		<div class="modal-footer">
+			<a href="javascript:void(0);" class="btn cancel no">Close</a>
 		</div>
 	</div>
 </script>

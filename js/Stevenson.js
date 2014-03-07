@@ -363,6 +363,22 @@ var Stevenson ={
 				}
 			});
 		},
+		getHistory: function(options) {
+			var settings = $.extend({}, {
+				success: function(repo){},
+				error: function(err){}
+			}, options);
+			var gh = Stevenson.repo.getGitHub(options);
+			var repo = gh.getRepo(Stevenson.Account.repo.split('/')[0], Stevenson.Account.repo
+					.split('/')[1]);
+			repo.getCommits({path: settings.path}, function(err, orgs) {
+				if (err) {
+					settings.error(Stevenson.repo.getErrorMessage(err));
+				} else {
+					settings.success(orgs);
+				}
+			});
+		},
 		getOrgs: function(options) {
 			var settings = $.extend({}, {
 				success: function(repo){},

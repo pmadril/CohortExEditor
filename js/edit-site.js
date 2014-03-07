@@ -75,7 +75,7 @@
 				show: true
 			});
 			$('#new-file-modal .no').click(function() {
-				$('#new-file-modal').remove();
+				$('#new-file-modal').modal('hide').remove();
 			});
 			$('form#new-file').submit(function() {
 				$('#new-file-modal .modal-body .alert-error').remove();
@@ -271,6 +271,36 @@
 			}
 			reader.readAsArrayBuffer(document.getElementById('upload-file-input').files[0]);	
 			return false;
+		});
+		
+		
+		/**
+		 * Support viewing a file's history
+		 */
+		$('.main-menu .view-history').click(function(){
+			Stevenson.ui.Loader.display('Loading file history...', 100);
+			var path = $('#files input[type=checkbox]:checked').parents('tr').attr('data-path');
+			Stevenson.repo.getHistory({
+				path: path,
+				success: function(commits){
+					Stevenson.ui.Messages.displayMessage("Loaded history of file: " + path);
+					Stevenson.ui.Loader.hide();
+					$('body').mustache('history', {});
+					$.each(commits, function(idx, commit) {
+						$('#history-modal .history-container').mustache('history-item', commit);
+					});
+					$('#history-modal').modal({
+						show: true
+					});
+					$('#history-modal .no').click(function() {
+						$('#history-modal').modal('hide').remove();
+					});
+				},
+				error: function(message){
+					Stevenson.ui.Messages.displayError("Failed to get history of file '" + path + "' due to error "+message);
+					Stevenson.ui.Loader.hide();
+				}
+			});
 		});
 	});
 })(jQuery);
