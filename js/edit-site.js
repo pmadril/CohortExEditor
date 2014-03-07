@@ -285,7 +285,9 @@
 				success: function(commits){
 					Stevenson.ui.Messages.displayMessage("Loaded history of file: " + path);
 					Stevenson.ui.Loader.hide();
-					$('body').mustache('history', {});
+					$('body').mustache('history', {
+						file: path
+					});
 					$.each(commits, function(idx, commit) {
 						$('#history-modal .history-container').mustache('history-item', commit);
 					});
