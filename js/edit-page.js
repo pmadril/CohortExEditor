@@ -3,7 +3,7 @@
 	var currentPage = null;
 	var loadEditor = function(properties){
 		var layout = properties.layout;
-		if(layout == '') {
+		if(!layout || layout == '') {
 			layout = 'default';
 		}
 		Stevenson.repo.getEditorConfig({
