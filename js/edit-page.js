@@ -2,6 +2,10 @@
 	var editorConfig = null;
 	var currentPage = null;
 	var loadEditor = function(properties){
+		var layout = properties.layout;
+		if(layout == '') {
+			layout = 'default';
+		}
 		Stevenson.repo.getEditorConfig({
 			layout: properties.layout,
 			success: function(config){
