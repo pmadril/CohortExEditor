@@ -1,9 +1,9 @@
 (function($) {
 	var editorConfig = null;
 	var currentPage = null;
-	var loadEditor = function(layout, properties){
+	var loadEditor = function(properties){
 		Stevenson.repo.getEditorConfig({
-			layout: layout,
+			layout: properties.layout,
 			success: function(config){
 				editorConfig = config;
 				Stevenson.ui.Editor.load(editorConfig, properties);
@@ -56,9 +56,9 @@
 					var properties = file.getProperties();
 					if(properties) {
 						$('#layout').val(properties.layout);
-						loadEditor(properties.layout, properties);
+						loadEditor( properties);
 					} else {
-						loadEditor(properties.layout, {});
+						loadEditor({});
 					}
 					$('#layout').change(function(){
 						$('.properties .fields').html('');
