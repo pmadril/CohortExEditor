@@ -58,8 +58,7 @@
 						$('#layout').val(properties.layout);
 						loadEditor(properties.layout, properties);
 					} else {
-						$('.container.properties').hide();
-						loadEditor(properties.layout, properties);
+						loadEditor(properties.layout, {});
 					}
 					$('#layout').change(function(){
 						$('.properties .fields').html('');
