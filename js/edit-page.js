@@ -59,7 +59,7 @@
 						loadEditor(properties.layout, properties);
 					} else {
 						$('.container.properties').hide();
-						Stevenson.ui.Loader.hide();
+						loadEditor(properties.layout, properties);
 					}
 					$('#layout').change(function(){
 						$('.properties .fields').html('');
