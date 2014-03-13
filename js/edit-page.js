@@ -42,7 +42,7 @@
 
 			$('#layout').change(function(){
 				$('.properties .fields').html('');
-				if(!properties){
+				if(typeof properties == "undefined"){
 					properties = {};
 				}
 				properties.layout = $('#layout').val();

@@ -245,41 +245,46 @@
 		/**
 		 * Support File Uploads
 		 */
-		$('.file-upload').click(function(){
+		$('.main-menu .file-upload').click(function(){
+			$('#upload-modal').remove();
 			var path = $('#files').attr('data-path');
-			$('#upload-modal input').val(path);
+			
+			$('body').mustache('upload', {
+				path: path
+			});
+			$('#upload-modal form').submit(function(){
+				$('#upload-modal').modal('hide');
+				Stevenson.ui.Loader.display('Uploading file...', 100);
+			
+				var reader = new FileReader();
+				reader.onload = function(e) {
+					var name = $('#upload-modal input[name=file]').val().split(/(\\|\/)/g).pop();
+					var page = new Page($('#upload-modal input[name=path]').val()+'/'+name, reader.result);
+					Stevenson.repo.savePage({
+						page: page,
+						path: page.path,
+						message: "Adding file: "+name,
+						success: function(){
+							Stevenson.ui.Messages.displayMessage("Successfully uploaded file "+name);
+							Stevenson.ui.Loader.hide();
+							loadFiles($('#files').attr('data-path'));
+						},
+						error: function(message){
+							Stevenson.ui.Messages.displayError("Failed to upload file "+name+" due to exception: "+message);
+							Stevenson.ui.Loader.hide();
+						}
+						
+					});
+				}
+				reader.readAsArrayBuffer(document.getElementById('upload-file-input').files[0]);	
+				return false;
+			});
 			$('#upload-modal').modal({
 				show: true
 			});
 			return false;
 		});
-		$('#upload-modal .yes').click(function(){
-			$('#upload-modal').modal('hide');
-			Stevenson.ui.Loader.display('Uploading file...', 100);
-			
-			var reader = new FileReader();
-			reader.onload = function(e) {
-				var name = $('#upload-modal .file').val().split(/(\\|\/)/g).pop();
-				var page = new Page($('#upload-modal .path').val()+'/'+name, reader.result);
-				Stevenson.repo.savePage({
-					page: page,
-					path: page.path,
-					message: "Adding file: "+name,
-					success: function(){
-						Stevenson.ui.Messages.displayMessage("Successfully uploaded file "+name);
-						Stevenson.ui.Loader.hide();
-						loadFiles($('#files').attr('data-path'));
-					},
-					error: function(message){
-						Stevenson.ui.Messages.displayError("Failed to upload file "+name+" due to exception: "+message);
-						Stevenson.ui.Loader.hide();
-					}
-					
-				});
-			}
-			reader.readAsArrayBuffer(document.getElementById('upload-file-input').files[0]);	
-			return false;
-		});
+		
 		
 		
 		/**

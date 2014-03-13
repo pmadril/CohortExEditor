@@ -109,3 +109,19 @@
 		</div>
 	</div>
 </script>
+<script id="upload" type="text/html">
+	<div id="upload-modal" class="modal">
+		<div class="modal-header">
+			<h3>Upload File</h3>
+		</div>
+		<div class="modal-body">
+			<form id="upload-form">
+				<label for="path">Path</label>
+				<input type="text" name="path" value="{{ path }}" />
+				<label for="file">Select File</label>
+				<input type="file" name="file" id="upload-file-input" />
+				<a href="javascript:void(0);" class="btn cancel no">Cancel</a>&nbsp;<input type="submit" class="btn btn-success yes" value="Upload File &gt;" />
+			</form>
+		</div>
+	</div>
+</script>
