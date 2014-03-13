@@ -15,6 +15,7 @@
 				Stevenson.ui.Loader.hide();
 			},
 			error:  function(message){
+				Stevenson.ui.ContentEditor.configure({});
 				Stevenson.ui.Loader.hide();
 				Stevenson.ui.Messages.displayError('Exception loading properties editor: '
 						+ message+', if you haven\' already, <a href="/cms/edit.html?new=true#_editors/'+layout+'.json">configure the editor for this template</a>.');

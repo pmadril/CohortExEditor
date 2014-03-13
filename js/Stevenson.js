@@ -561,14 +561,27 @@ var Stevenson ={
 			},
 			setContent: function(page) {
 				$('.content').html('');
-				var editors = Stevenson.ui.ContentEditor.editors;
-				for(var i = 0; i < editors.length; i++) {
-					if(page.path.toLowerCase().match(editors[i].regex)) {
-						Stevenson.ui.ContentEditor.currentEditor = editors[i];
-						Stevenson.log.debug('Using editor ' + editors[i].name);
-						break;
+				var editor = Stevenson.util.getParameter('editor');
+				if (editor != '') {
+					var editors = Stevenson.ui.ContentEditor.editors;
+					for(var i = 0; i < editors.length; i++) {
+						if(editor == editors[i].name) {
+							Stevenson.ui.ContentEditor.currentEditor = editors[i];
+							Stevenson.log.debug('Using editor ' + editors[i].name);
+							break;
+						}
+					}
+				} else {
+					var editors = Stevenson.ui.ContentEditor.editors;
+					for(var i = 0; i < editors.length; i++) {
+						if(page.path.toLowerCase().match(editors[i].regex)) {
+							Stevenson.ui.ContentEditor.currentEditor = editors[i];
+							Stevenson.log.debug('Using editor ' + editors[i].name);
+							break;
+						}
 					}
 				}
+				
 				$.Mustache.load('/templates/cms.html').done(function () {
 					Stevenson.ui.ContentEditor.currentEditor.setContent(page);
 				});
