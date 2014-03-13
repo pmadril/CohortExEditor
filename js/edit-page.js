@@ -38,7 +38,11 @@
 
 			$('#layout').change(function(){
 				$('.properties .fields').html('');
-				loadEditor($('#layout').val(),{});
+				if(!properties){
+					properties = {};
+				}
+				properties.layout = $('#layout').val();
+				loadEditor(properties);
 			});
 		} else {
 			Stevenson.ui.Loader.display('Loading page...', 100);
@@ -56,14 +60,15 @@
 					var properties = file.getProperties();
 					if(properties) {
 						$('#layout').val(properties.layout);
-						loadEditor(properties.layout, properties);
+						loadEditor(properties);
 					} else {
 						$('.container.properties').hide();
 						Stevenson.ui.Loader.hide();
 					}
 					$('#layout').change(function(){
 						$('.properties .fields').html('');
-						loadEditor($('#layout').val(),properties);
+						properties.layout = $('#layout').val();
+						loadEditor(properties);
 					});
 				},
 				error: function(message){
