@@ -252,6 +252,11 @@
 			$('body').mustache('upload', {
 				path: path
 			});
+			
+			
+			$('#upload-modal .no').click(function() {
+				$('#upload-modal').modal('hide').remove();
+			});
 			$('#upload-modal form').submit(function(){
 				$('#upload-modal').modal('hide');
 				Stevenson.ui.Loader.display('Uploading file...', 100);
@@ -284,7 +289,6 @@
 			});
 			return false;
 		});
-		
 		
 		
 		/**
