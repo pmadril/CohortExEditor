@@ -1,9 +1,13 @@
 (function($) {
 	var editorConfig = null;
 	var currentPage = null;
-	var loadEditor = function(layout, properties){
+	var loadEditor = function(properties){
+		var layout = properties.layout;
+		if(!layout || layout == '') {
+			layout = 'default';
+		}
 		Stevenson.repo.getEditorConfig({
-			layout: layout,
+			layout: properties.layout,
 			success: function(config){
 				editorConfig = config;
 				Stevenson.ui.Editor.load(editorConfig, properties);
@@ -62,8 +66,7 @@
 						$('#layout').val(properties.layout);
 						loadEditor(properties);
 					} else {
-						$('.container.properties').hide();
-						Stevenson.ui.Loader.hide();
+						loadEditor({});
 					}
 					$('#layout').change(function(){
 						$('.properties .fields').html('');
