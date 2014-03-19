@@ -240,6 +240,33 @@ var Stevenson ={
 				}
 			});
 		},
+		getAllFiles: function(options){
+			var settings = $.extend({}, {
+				success: function(files){},
+				error: function(err){}
+				}, options);
+			
+			var gh = Stevenson.repo.getGitHub();
+			var repo = gh.getRepo(Stevenson.Account.repo.split('/')[0], Stevenson.Account.repo
+					.split('/')[1]);
+			repo.getTree(Stevenson.Account.branch + '?recursive=true', function(err, tree) {
+				if (err) {
+					settings.error(Stevenson.repo.getErrorMessage(err));
+				} else {
+					Stevenson.log.debug("Trying to load files under path: " + settings.path);
+					var files = [];
+					for(var i=0; i < tree.length; i++) {
+						var rf = tree[i];
+						if(rf.path.indexOf(settings.path) == 0) {
+							files.push(rf.path);
+						} else {
+							Stevenson.log.debug("Skipping file: " + rf.path);
+						};
+					}
+					settings.success(files);
+				};
+			});
+		},
 		getFiles: function(options){
 			var settings = $.extend({}, {
 				success: function(files){},
@@ -773,6 +800,43 @@ var Stevenson ={
 							html+='required="required"';
 						}
 						html+='/></div>';
+						container.append(html);
+					},
+					save: function(field, properties){
+						var value = $('input[name='+field.name+']').val();
+						if (value == '' && properties[field.name]) {
+							delete properties[field.name];
+						} else if (value != '') {
+							properties[field.name] = value;
+						}
+					}
+				},
+				path: {
+					load: function(container, field, properties){
+						if(field.label){
+							container.append('<label class="control-label" for="'+field.name+'">'+field.label+'</label>');
+						}
+						var value = '';
+						if(properties[field.name]){
+							value = properties[field.name];
+						} else if(field.value){
+							value = field.value;
+						}
+						var html = '<div class="controls"><input type="text" list="'+field.name+'-paths" name="'+field.name+'" value="'+value+'" ';
+						if(field.required){
+							html+='required="required"';
+						}
+						html+='/><datalist id="'+field.name+'-paths"></datalist></div>';
+						Stevenson.repo.getAllFiles({
+							path: '',
+							success: function(files){
+								alert(files.length);
+								$.each(files,function(index, file){
+									alert(file);
+									$('#'+field.name+'-paths').append('<option value="'+file+'" />');
+								});
+							}
+						});
 						container.append(html);
 					},
 					save: function(field, properties){
