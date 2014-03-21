@@ -830,9 +830,7 @@ var Stevenson ={
 						Stevenson.repo.getAllFiles({
 							path: '',
 							success: function(files){
-								alert(files.length);
 								$.each(files,function(index, file){
-									alert(file);
 									$('#'+field.name+'-paths').append('<option value="'+file+'" />');
 								});
 							}
