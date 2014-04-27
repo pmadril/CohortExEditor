@@ -8,7 +8,8 @@
 	}
 	var loadFiles = function(path){
 		Stevenson.ui.Loader.display('Loading files...', 100);
-		
+		$('#grid-container').html('');
+		$('#grid-container').mustache('grid', {});
 		Stevenson.repo.getFiles({
 			path: path,
 			success: function(files){
@@ -61,6 +62,7 @@
 		}
 		$('.breadcrumb .path').html(path);
 		loadFiles(path);
+		
 	});
 	$(document).ready(function(){
 		
@@ -298,13 +300,16 @@
 		$('.main-menu .view-history').click(function(){
 			Stevenson.ui.Loader.display('Loading file history...', 100);
 			var path = $('#files input[type=checkbox]:checked').parents('tr').attr('data-path');
+			if(!path){
+				path = "";
+			}
 			Stevenson.repo.getHistory({
 				path: path,
 				success: function(commits){
-					Stevenson.ui.Messages.displayMessage("Loaded history of file: " + path);
+					Stevenson.ui.Messages.displayMessage("Loaded history of file: /" + path);
 					Stevenson.ui.Loader.hide();
 					$('body').mustache('history', {
-						file: path
+						file: "/" + path
 					});
 					$.each(commits, function(idx, commit) {
 						$('#history-modal .history-container').mustache('history-item', commit);
