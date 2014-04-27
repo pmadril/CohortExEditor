@@ -41,6 +41,7 @@
 						}
 					});
 				});
+				$('#files').dataTable();
 				Stevenson.ui.Loader.hide();
 			},
 			error: function(message){
