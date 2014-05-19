@@ -92,6 +92,9 @@
 								filterRepos(org.login);
 							};
 							$('#'+org.login+'-filter input').change(filterRepo).keyup(filterRepo).click(filterRepo).focusout(filterRepo);
+							$('#'+org.login+'-filter').submit(function(){
+								return false;
+							});
 						}
   						$(this).tab('show');
   						return false;
