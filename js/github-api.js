@@ -358,8 +358,13 @@
             "encoding": "utf-8"
           };
         } else {
+        	var str = '';
+        	var bin = new Uint8Array(content);
+        	for (int i = 0; i < bin.length; i++ ) {
+        		str += String.fromCharCode(bin[i]);
+        	}
           	content = {
-              "content": btoa(String.fromCharCode.apply(null, new Uint8Array(content))),
+              "content": btoa(str),
               "encoding": "base64"
             };
           }
