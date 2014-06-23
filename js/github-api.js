@@ -360,7 +360,7 @@
         } else {
         	var str = '';
         	var bin = new Uint8Array(content);
-        	for (int i = 0; i < bin.length; i++ ) {
+        	for (var i = 0; i < bin.length; i++ ) {
         		str += String.fromCharCode(bin[i]);
         	}
           	content = {
