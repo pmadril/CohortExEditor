@@ -5,6 +5,7 @@ var Stevenson ={
 	Account: {
 		authenticated : false,
 		branch : '',
+		email: '',
 		favoriteRepos : [],
 		name : '',
 		password : '',
@@ -16,6 +17,7 @@ var Stevenson ={
 		clear : function() {
 			Stevenson.Account.authenticated = false;
 			Stevenson.Account.branch = '';
+			Stevenson.Account.email = '';
 			Stevenson.Account.favoriteRepos = [];
 			Stevenson.Account.name = '';
 			Stevenson.Account.password = '';
@@ -325,6 +327,7 @@ var Stevenson ={
 			return new Github({
 				username : Stevenson.Account.username,
 				password : Stevenson.Account.password,
+				email : Stevenson.Account.email,
 				auth : "basic"
 			});
 		},

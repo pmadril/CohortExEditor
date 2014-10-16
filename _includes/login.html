@@ -12,6 +12,8 @@
 		<form id="login">
 			<label for="username">Username</label>
 			<input type="text" id="username" name="username" />
+			<label for="email">Email (for Commit Ownership)</label>
+			<input type="text" id="email" name="email" />
 			<label for="password">Password</label>
 			<input type="password" id="password" name="password" /><br/>
 			<input type="submit" class="btn btn-success" value="Login &gt;" />
@@ -27,27 +29,22 @@
 		$('form#login').submit(function() {
 			Stevenson.log.debug('Submitting login form');
 			$('#login-modal .error').hide();
-			$('#username').attr("disabled", "disabled");
-			$('#password').attr("disabled", "disabled");
-			$('#login input[type=submit]').attr("disabled", "disabled");
+			$('#login input').attr("disabled", "disabled");
 			
 			Stevenson.Account.clear();
 			Stevenson.Account.username = $('#username').val();
 			Stevenson.Account.password = $('#password').val();
+			Stevenson.Account.email = $('#email').val();
 
 			Stevenson.repo.login({
 				error: function(message){
-					$('#username').removeAttr("disabled");
-					$('#password').removeAttr("disabled");
-					$('#login input[type=submit]').removeAttr("disabled");
+					$('#login input').removeAttr("disabled");
 					Stevenson.log.debug('Login failed with message: ' + message);
 					$('#login-modal .error').html('Login Failed: ' + message);
 					$('#login-modal .error').show();
 				},
 				success: function(user){
-					$('#username').removeAttr("disabled");
-					$('#password').removeAttr("disabled");
-					$('#login input[type=submit]').removeAttr("disabled");
+					$('#login input').removeAttr("disabled");
 					$('#login-modal').modal('hide');
 					window.location = '/cms';
 				}

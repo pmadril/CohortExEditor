@@ -27,6 +27,8 @@
   var API_URL = 'https://api.github.com';
 
   var Github = function(options) {
+  
+    var ghOptions = options;
 
     // HTTP Request Abstraction
     // =======
@@ -415,7 +417,8 @@
         var data = {
           "message": message,
           "author": {
-            "name": options.username
+            "name": ghOptions.username,
+            "email": ghOptions.email
           },
           "parents": [
             parent
