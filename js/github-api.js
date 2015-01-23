@@ -29,6 +29,8 @@
   var Github = function(options) {
   
     var ghOptions = options;
+    
+    
 
     // HTTP Request Abstraction
     // =======
@@ -113,6 +115,15 @@
 
       this.orgs = function(cb) {
         _request("GET", "/user/orgs", null, function(err, res) {
+          cb(err, res);
+        });
+      };
+      
+      // List user emails
+      // -------
+
+      this.emails = function(cb) {
+        _request("GET", "/user/emails", null, function(err, res) {
           cb(err, res);
         });
       };
@@ -414,23 +425,39 @@
       // -------
 
       this.commit = function(parent, tree, message, cb) {
-        var data = {
-          "message": message,
-          "author": {
-            "name": ghOptions.username,
-            "email": ghOptions.email
-          },
-          "parents": [
-            parent
-          ],
-          "tree": tree
-        };
+      	var doCommit = function(parent, tree, message, cb){
+			var data = {
+			  "message": message,
+			  "author": {
+				"name": ghOptions.username,
+				"email": ghOptions.email
+			  },
+			  "parents": [
+				parent
+			  ],
+			  "tree": tree
+			};
 
-        _request("POST", repoPath + "/git/commits", data, function(err, res) {
-          currentTree.sha = res.sha; // update latest commit
-          if (err) return cb(err);
-          cb(null, res.sha);
-        });
+			_request("POST", repoPath + "/git/commits", data, function(err, res) {
+			  currentTree.sha = res.sha; // update latest commit
+			  if (err) return cb(err);
+			  cb(null, res.sha);
+			});
+		}
+      	
+      	if(!ghOptions.email){
+      		// Populate the email account to use
+			new Github.User().emails(function(err,emails){
+				emails.forEach(function(email){
+					if(email.primary){
+						ghOptions.email = email.email;
+					}
+				});
+				doCommit(parent, tree, message, cb);
+			});
+      	} else {
+      		doCommit(parent, tree, message, cb);
+      	}
       };
 
       // Update the reference of your head to point to the new commit SHA
@@ -773,6 +800,7 @@
     this.getGist = function(id) {
       return new Github.Gist({id: id});
     };
+    
   };
 
 

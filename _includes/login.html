@@ -12,8 +12,6 @@
 		<form id="login">
 			<label for="username">Username</label>
 			<input type="text" id="username" name="username" />
-			<label for="email">Email (for Commit Ownership)</label>
-			<input type="text" id="email" name="email" />
 			<label for="password">Password</label>
 			<input type="password" id="password" name="password" /><br/>
 			<input type="submit" class="btn btn-success" value="Login &gt;" />
@@ -34,7 +32,6 @@
 			Stevenson.Account.clear();
 			Stevenson.Account.username = $('#username').val();
 			Stevenson.Account.password = $('#password').val();
-			Stevenson.Account.email = $('#email').val();
 
 			Stevenson.repo.login({
 				error: function(message){
