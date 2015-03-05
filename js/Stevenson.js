@@ -894,7 +894,7 @@ var Stevenson ={
 							$.each(properties[field.name], function(index, val){
 								var html = '<div id="'+field.name+'-value-'+index+'">';
 								html+='<input type="text" name="'+field.name+'" value="'+val+'" required="required" />';
-								html+='<a href="#" class="btn" tabindex = "-1" onclick="$(\'#'+field.name+'-value-'+index+'\').remove()">-</a></div>';
+								html+='<a href="#" class="btn" tabindex = "-1" onclick="$(\'#'+field.name+'-value-'+index+'\').remove();return false;">-</a></div>';
 								values.append(html);
 								count++;
 							});
