@@ -829,10 +829,7 @@ var Stevenson ={
 						if (value == '' && properties[field.name]) {
 							delete properties[field.name];
 						} else if (value != '') {
-							var d = new Date(value);
-							value = d.getUTCFullYear()+'-'+(d.getUTCMonth() < 10 ? '0'+d.getUTCMonth() : d.getUTCMonth()) +
-								'-' + (d.getUTCDay() < 10 ? '0'+d.getUTCDay() : d.getUTCDay()) + " 00:00:00";
-							properties[field.name] = value;
+							properties[field.name] = new Date(value);
 						}
 					}
 				},
