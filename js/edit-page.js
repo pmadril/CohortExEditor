@@ -2,25 +2,30 @@
 	var editorConfig = null;
 	var currentPage = null;
 	var loadEditor = function(properties){
-		var layout = properties.layout;
-		if(!layout || layout == '') {
-			layout = 'default';
-		}
-		Stevenson.repo.getEditorConfig({
-			layout: properties.layout,
-			success: function(config){
-				editorConfig = config;
-				Stevenson.ui.Editor.load(editorConfig, properties);
-				Stevenson.ui.ContentEditor.configure(editorConfig);
-				Stevenson.ui.Loader.hide();
-			},
-			error:  function(message){
-				Stevenson.ui.ContentEditor.configure({});
-				Stevenson.ui.Loader.hide();
-				Stevenson.ui.Messages.displayError('Exception loading properties editor: '
-						+ message+', if you haven\'t already, <a href="/cms/edit.html?new=true#_editors/'+layout+'.json">configure the editor for this template</a>.');
+		if(properties){
+			var layout = properties.layout;
+			if(!layout || layout == '') {
+				layout = 'default';
 			}
-		});
+			Stevenson.repo.getEditorConfig({
+				layout: properties.layout,
+				success: function(config){
+					editorConfig = config;
+					Stevenson.ui.Editor.load(editorConfig, properties);
+					Stevenson.ui.ContentEditor.configure(editorConfig);
+					Stevenson.ui.Loader.hide();
+				},
+				error:  function(message){
+					Stevenson.ui.ContentEditor.configure({});
+					Stevenson.ui.Loader.hide();
+					Stevenson.ui.Messages.displayError('Exception loading properties editor: '
+							+ message+', if you haven\'t already, <a href="/cms/edit.html?new=true#_editors/'+layout+'.json">configure the editor for this template</a>.');
+				}
+			});
+		} else {
+			Stevenson.ui.ContentEditor.configure({});
+			Stevenson.ui.Loader.hide();
+		}
 	};
 	var initialize = function() {
 		Stevenson.log.info('Editing page');
@@ -65,12 +70,13 @@
 					var properties = file.getProperties();
 					if(properties) {
 						$('#layout').val(properties.layout);
-						loadEditor(properties);
-					} else {
-						loadEditor({});
 					}
+					loadEditor(properties);
 					$('#layout').change(function(){
 						$('.properties .fields').html('');
+						if(typeof properties == "undefined"){
+							properties = {};
+						}
 						properties.layout = $('#layout').val();
 						loadEditor(properties);
 					});

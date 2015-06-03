@@ -621,20 +621,36 @@ var Stevenson ={
 					name: 'rte',
 					regex: '^.+\.(htm|html)$',
 					configure: function(config){
-						var rteConfig = $.extend({
-							relative_urls: false,
-							selector: '#content',
-    						plugins: [
-    							"autolink lists link image charmap print preview hr anchor pagebreak",
-    							"searchreplace wordcount visualblocks visualchars code fullscreen",
-    							"insertdatetime media nonbreaking save table contextmenu directionality",
-    							"emoticons template paste textcolor"
-    						],
-    						toolbar1: "undo redo | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image media table | code",
-							image_advtab: true,
-							menubar: false
-						}, config.rte);
-						tinymce.init(rteConfig);
+						Stevenson.repo.getAllFiles({
+							path: '',
+							success: function(files){
+								var imageList = [];
+								$.each(files,function(index, file){
+									if(file.match(/.+\.(?:jpg|jpeg|ico|gif|png)$/i)){
+										imageList.push({
+											title: '/'+file,
+											value: '/'+file
+										});
+									}
+								});
+								var rteConfig = $.extend({
+									relative_urls: false,
+									selector: '#content',
+									plugins: [
+										"autolink lists link image charmap print preview hr anchor pagebreak",
+										"searchreplace wordcount visualblocks visualchars code fullscreen",
+										"insertdatetime media nonbreaking save table contextmenu directionality",
+										"emoticons template paste textcolor"
+									],
+									toolbar1: "undo redo | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image media table | code",
+									image_advtab: true,
+									menubar: false,
+									image_list: imageList
+								}, config.rte);
+								tinymce.init(rteConfig);
+							}
+						});
+						
 					},
 					setContent: function(page){
 						$('.content').mustache('page-content-textarea', {content: page.getPageContent()});
@@ -645,7 +661,7 @@ var Stevenson ={
 				},
 				{
 					name: 'text',
-					regex: '^.+\.(json|yaml|css|js|txt|gitignore|xml|php)$',
+					regex: '^.+\.(json|yaml|css|js|txt|gitignore|xml|php|rb)$',
 					configure: function(config){
 					},
 					setContent: function(page){
@@ -801,10 +817,12 @@ var Stevenson ={
 						}
 						html+='/></div>';
 						container.append(html);
-						if(!(value instanceof Date)){
-							value = new Date(value);
+						if(value && value != "" ){
+							if (!(value instanceof Date)){
+								value = new Date(value);
+							}
+							$('input[name='+field.name+']').val(value.toISOString().substring(0, 10));
 						}
-						$('input[name='+field.name+']').val(value.toISOString().substring(0, 10));
 					},
 					save: function(field, properties){
 						var value = $('input[name='+field.name+']').val();
