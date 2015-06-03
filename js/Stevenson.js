@@ -795,18 +795,25 @@ var Stevenson ={
 						} else if(field.value){
 							value = field.value;
 						}
-						var html = '<div class="controls"><input type="date" name="'+field.name+'" value="'+value+'" ';
+						var html = '<div class="controls"><input type="date" name="'+field.name+'" ';
 						if(field.required){
 							html+='required="required"';
 						}
 						html+='/></div>';
 						container.append(html);
+						if(!(value instanceof Date)){
+							value = new Date(value);
+						}
+						$('input[name='+field.name+']').val(value.toISOString().substring(0, 10));
 					},
 					save: function(field, properties){
 						var value = $('input[name='+field.name+']').val();
 						if (value == '' && properties[field.name]) {
 							delete properties[field.name];
 						} else if (value != '') {
+							var d = new Date(value);
+							value = d.getUTCFullYear()+'-'+(d.getUTCMonth() < 10 ? '0'+d.getUTCMonth() : d.getUTCMonth()) +
+								'-' + (d.getUTCDay() < 10 ? '0'+d.getUTCDay() : d.getUTCDay()) + " 00:00:00";
 							properties[field.name] = value;
 						}
 					}
@@ -822,16 +829,22 @@ var Stevenson ={
 						} else if(field.value){
 							value = field.value;
 						}
-						var html = '<div class="controls"><input type="text" list="'+field.name+'-paths" name="'+field.name+'" value="'+value+'" ';
+						var html = '<div class="controls"><input type="text" name="'+field.name+'" value="'+value+'" ';
 						if(field.required){
 							html+='required="required"';
 						}
-						html+='/><datalist id="'+field.name+'-paths"></datalist></div>';
+						html+='/>';
 						Stevenson.repo.getAllFiles({
 							path: '',
 							success: function(files){
+								var filtered = [];
 								$.each(files,function(index, file){
-									$('#'+field.name+'-paths').append('<option value="'+file+'" />');
+									if(!(field.filter) || file.match(field.filter)){
+										filtered.push('/'+file);
+									}
+								});
+								$('input[name='+field.name+']').typeahead({
+									source: filtered
 								});
 							}
 						});
