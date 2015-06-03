@@ -757,7 +757,13 @@ var Stevenson ={
 					if(Stevenson.ui.Editor.types[field.type]) {
 						Stevenson.log.debug('Loading field '+field.name+' of type '+ field.type);
 						$('.properties .fields').append('<div class="control-group" id="field-'+idx+'"></div>');
+						if(field.label){
+							$('#field-'+idx).append('<label class="control-label" for="'+field.name+'">'+field.label+'</label>');
+						}
 						Stevenson.ui.Editor.types[field.type].load($('#field-'+idx), field, properties);
+						if(field.help){
+							$('#field-'+idx).append('<p class="help-block">'+field.help+'</p>');
+						}
 					} else {
 						Stevenson.ui.Messages.displayError('Unable to find editor for: '
 								+ field.type);
@@ -786,9 +792,6 @@ var Stevenson ={
 			types : {
 				checkbox: {
 					load: function(container, field, properties){
-						if(field.label){
-							container.append('<label class="control-label" for="'+field.name+'">'+field.label+'</label>');
-						}
 						var checked = (properties[field.name] === true);
 						if(field.value === true && !properties.hasOwnProperty(field.name)){
 							checked = true;
@@ -802,9 +805,6 @@ var Stevenson ={
 				},
 				date: {
 					load: function(container, field, properties){
-						if(field.label){
-							container.append('<label class="control-label" for="'+field.name+'">'+field.label+'</label>');
-						}
 						var value = '';
 						if(properties[field.name]){
 							value = properties[field.name];
@@ -835,9 +835,6 @@ var Stevenson ={
 				},
 				path: {
 					load: function(container, field, properties){
-						if(field.label){
-							container.append('<label class="control-label" for="'+field.name+'">'+field.label+'</label>');
-						}
 						var value = '';
 						if(properties[field.name]){
 							value = properties[field.name];
@@ -876,9 +873,6 @@ var Stevenson ={
 				},
 				number: {
 					load: function(container, field, properties){
-						if(field.label){
-							container.append('<label class="control-label" for="'+field.name+'">'+field.label+'</label>');
-						}
 						var value = '';
 						if(properties[field.name]){
 							value = properties[field.name];
@@ -912,9 +906,6 @@ var Stevenson ={
 						container.attr('data-count', count);
 					},
 					load: function(container, field, properties){
-						if(field.label){
-							container.append('<label class="control-label" for="'+field.name+'">'+field.label+'</label>');
-						}
 						var controls = $(container.append('<div class="controls"></div>').find('.controls')[0]);
 						var values = $(controls.append('<div class="values" data-name="'+field.name+'"></div>').find('.values')[0]);
 						var count = 0;
@@ -945,9 +936,6 @@ var Stevenson ={
 				},
 				text: {
 					load: function(container, field, properties){
-						if(field.label){
-							container.append('<label class="control-label" for="'+field.name+'">'+field.label+'</label>');
-						}
 						var value = '';
 						if(properties[field.name]){
 							value = properties[field.name];
@@ -972,9 +960,6 @@ var Stevenson ={
 				},
 				textarea: {
 					load: function(container, field, properties){
-						if(field.label){
-							container.append('<label class="control-label" for="'+field.name+'">'+field.label+'</label>');
-						}
 						var value = '';
 						if(properties[field.name]){
 							value = properties[field.name];
