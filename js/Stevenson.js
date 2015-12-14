@@ -934,6 +934,38 @@ var Stevenson ={
 						}
 					}
 				},
+				select: {
+					load: function(container, field, properties){
+						var value = '';
+						if(properties[field.name]){
+							value = properties[field.name];
+						} else if(field.value){
+							value = field.value;
+						}
+						var html = '<div class="controls"><select name="'+field.name+'" ';
+						if(field.required){
+							html+='required="required"';
+						}
+                        html+=">";
+                        $.each(field.options, function(idx,elem){
+                            if(value == elem){
+                                html+='<option selected="selected">'+elem+"</option>";
+                            } else {
+                                html+='<option>'+elem+"</option>";
+                            }
+                        });
+						html+='</select></div>';
+						container.append(html);
+					},
+					save: function(field, properties){
+						var value = $('select[name='+field.name+']').val();
+						if (value == '' && properties[field.name]) {
+							delete properties[field.name];
+						} else if (value != '') {
+							properties[field.name] = value;
+						}
+					}
+				},
 				text: {
 					load: function(container, field, properties){
 						var value = '';
