@@ -811,7 +811,7 @@ var Stevenson ={
 						} else if(field.value){
 							value = field.value;
 						}
-						var html = '<div class="controls"><input type="date" name="'+field.name+'" ';
+						var html = '<div class="controls"><input type="datetime-local" name="'+field.name+'" ';
 						if(field.required){
 							html+='required="required"';
 						}
