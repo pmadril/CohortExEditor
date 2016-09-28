@@ -821,7 +821,7 @@ var Stevenson ={
 							if (!(value instanceof Date)){
 								value = new Date(value);
 							}
-							$('input[name='+field.name+']').val(value.toISOString().substring(0, 10));
+							$('input[name='+field.name+']').val(value.toISOString().substring(0,19));
 						}
 					},
 					save: function(field, properties){
@@ -829,7 +829,7 @@ var Stevenson ={
 						if (value == '' && properties[field.name]) {
 							delete properties[field.name];
 						} else if (value != '') {
-							properties[field.name] = new Date(value);
+							properties[field.name] = new Date(new Date(value).getTime()+new Date().getTimezoneOffset()*60000);
 						}
 					}
 				},
