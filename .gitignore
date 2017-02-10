@@ -1,3 +1,5 @@
+.sass-cache
+.jekyll-metadata
 *.sw*
 _site/
 .project
