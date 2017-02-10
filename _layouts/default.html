@@ -31,30 +31,20 @@
 		</script>
 	</head>
 	<body>
-		<div class="navbar navbar-inverse navbar-fixed-top">
-			<div class="navbar-inner">
-				<button type="button" class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
-					<span class="icon-bar"></span>
-					<span class="icon-bar"></span>
-					<span class="icon-bar"></span>
-				</button>
-				<a class="brand" href="{{ site.baseurl }}/" title="Stevenson - CMS for GitHub + Jekyll">
-					<img src="{{ site.baseurl }}/img/logo-medium.png" width="20" height="20" alt="Stevenson - CMS for GitHub + Jekyll" />
-					Stevenson
-				</a>
-				<div class="navbar-text pull-right" id="top-login">
-					<a href="#" onclick="javascript:$('#login-modal').modal('show');">Login</a>
-				</div>
-				<div class="nav-collapse collapse">
-					<ul class="nav">
-						<li><a href="{{ site.baseurl }}/">Home</a></li>
-						<li><a href="{{ site.baseurl }}/cms">CMS</a></li>
-						<li><a href="{{ site.baseurl }}/about.html">About</a></li>
-						<li><a href="{{ site.baseurl }}/documentation/">Documentation</a></li>
-					</ul>
-				</div>
-			</div>
-		</div>
+		{% case page.mainMenu %}
+			{% when 'stevMenuBar' %}
+				{% include stevMenuBar.html %}
+			{% when 'cmsMenuBar' %}
+				{% include cmsMenuBar.html %}
+			{% when 'mainMenuBar' %}
+				{% include mainMenuBar.html %}
+			{% when 'filesStudiesMenuBar' %}
+				{% include filesStudiesMenuBar.html %}
+			{% when 'filesPostsMenuBar' %}
+				{% include filesPostsMenuBar.html %}
+			{% else %}
+				{% include mainMenuBar.html %}
+		{% endcase %}
 		<div class="container-fluid">
 			<div class="row">
 				<div class="span12">
@@ -64,7 +54,7 @@
 			{{content}}
 			<hr/>
 			<footer>
-				<p>&copy; Dan Klco - 2012</p>
+				<p>CohortEx Parameters Editor (&copy; Pablo J. Madril - 2017): Based on <a href="https://github.com/StevensonCMS/StevensonCMS.github.io">StevensonCMS</a> (&copy; Dan Klco - 2012) - both under Apache License 2.0</p>
 			</footer>
 		</div>
 		{% include login.html %}
