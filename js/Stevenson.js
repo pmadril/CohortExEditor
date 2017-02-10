@@ -1,3 +1,5 @@
+---
+---
 var Stevenson ={
 	/**
 	 * Holds the current account information.  
@@ -68,7 +70,7 @@ var Stevenson ={
 		});
 		
 		Stevenson.log.debug("Loading the global CMS template");
-		$.Mustache.load('/templates/cms.html').done(function(){		
+		$.Mustache.load('{{ site.baseurl }}/templates/cms.html').done(function(){		
 			Stevenson.log.info('Initializing application');
 	
 			// Pre-start checks
@@ -90,7 +92,7 @@ var Stevenson ={
 			}else{
 				if (Stevenson.Account.authenticated && Stevenson.Account.authenticated == true) {
 					Stevenson.log.debug("Adding logged in top section");
-					$.Mustache.load('/templates/authentication.html').done(function () {
+					$.Mustache.load('{{ site.baseurl }}/templates/authentication.html').done(function () {
 						$('#top-login').html('');
 						$('#top-login').mustache('top-bar', {name: Stevenson.Account.name});
 					});
@@ -609,7 +611,7 @@ var Stevenson ={
 					}
 				}
 				
-				$.Mustache.load('/templates/cms.html').done(function () {
+				$.Mustache.load('{{ site.baseurl }}/templates/cms.html').done(function () {
 					Stevenson.ui.ContentEditor.currentEditor.setContent(page);
 				});
 			},
@@ -635,6 +637,7 @@ var Stevenson ={
 								});
 								var rteConfig = $.extend({
 									relative_urls: false,
+									convert_urls: false,
 									selector: '#content',
 									plugins: [
 										"autolink lists link image charmap print preview hr anchor pagebreak",
@@ -647,6 +650,8 @@ var Stevenson ={
 									menubar: false,
 									image_list: imageList
 								}, config.rte);
+								// CohortExDev - Correct url to actual value
+								rteConfig.document_base_url = '{{ site.baseurl }}';
 								tinymce.init(rteConfig);
 							}
 						});
@@ -681,7 +686,7 @@ var Stevenson ={
 						new EpicEditor({
 							textarea: 'content',
 							container: 'markdown-editor',
-							basePath: '/js/epiceditor',
+							basePath: '{{ site.baseurl }}/js/epiceditor',
 							autogrow: true
 						}).load();
 					},

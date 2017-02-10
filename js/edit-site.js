@@ -1,3 +1,5 @@
+---
+---
 (function($) {
 	function bytesToSize(bytes) {
 		var k = 1000;
@@ -105,7 +107,7 @@
 						},
 						message: 'Creating new page ' + name,
 						success: function(){
-							window.location = '/cms/edit.html?new=true#'+filePath;
+							window.location = '{{ site.baseurl }}/cms/edit.html?new=true#'+filePath;
 						},
 						error: function(msg){
 							$('#new-file-modal .btn, #new-file-modal input').removeAttr('disabled');
@@ -127,7 +129,7 @@
 		$('.file-edit').click(function(){
 			Stevenson.ui.Loader.display('Loading editor...', 100);
 			var path = $('#files input[type=checkbox]:checked').parents('tr').attr('data-path');
-			window.location = '/cms/edit.html#' + path;
+			window.location = '{{ site.baseurl }}/cms/edit.html#' + path;
 			return false;
 		});
 		

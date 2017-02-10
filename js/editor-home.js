@@ -1,3 +1,5 @@
+---
+---
 (function($) {
 	var filterRepos = function(id){
 		var filter = $('#'+id+'-filter input').val().toLowerCase();
@@ -19,7 +21,7 @@
 		Stevenson.Account.save();
 		Stevenson.repo.getLayouts({
 			success: function(branches){
-				window.location = '/cms/site.html';
+				window.location = '{{ site.baseurl }}/cms/site.html';
 			},
 			error: function(err){
 				Stevenson.ui.Messages.displayError('Unable to load layouts: '

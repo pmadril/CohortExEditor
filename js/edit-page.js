@@ -1,3 +1,5 @@
+---
+---
 (function($) {
 	var editorConfig = null;
 	var currentPage = null;
@@ -19,7 +21,7 @@
 					Stevenson.ui.ContentEditor.configure({});
 					Stevenson.ui.Loader.hide();
 					Stevenson.ui.Messages.displayError('Exception loading properties editor: '
-							+ message+', if you haven\'t already, <a href="/cms/edit.html?new=true#_editors/'+layout+'.json">configure the editor for this template</a>.');
+							+ message+', if you haven\'t already, <a href="{{ site.baseurl }}/cms/edit.html?new=true#_editors/'+layout+'.json">configure the editor for this template</a>.');
 				}
 			});
 		} else {
@@ -36,7 +38,7 @@
 	
 		if (Stevenson.Account.repo == '') {
 			Stevenson.log.warn('Website repository not set');
-			Stevenson.ui.Messages.displayError('Website repository not set.  <a href="/cms">Configure</a>');
+			Stevenson.ui.Messages.displayError('Website repository not set.  <a href="{{ site.baseurl }}/cms">Configure</a>');
 		}
 		
 		var pagePath = window.location.hash.substr(1);
@@ -99,7 +101,7 @@
 				oldPath: oldPath,
 				newPath: newPath,
 				success: function(path){
-					window.location.replace('/cms/edit.html#'+newPath);
+					window.location.replace('{{ site.baseurl }}/cms/edit.html#'+newPath);
 					initialize();
 					Stevenson.ui.Messages.displayMessage("Moved file: " + oldPath +' to ' + newPath);
 					Stevenson.ui.Loader.hide();
@@ -180,7 +182,7 @@
 					Stevenson.ui.Messages.displayMessage('Page saved successfully!');
 					Stevenson.ui.Loader.hide();
 					if (Stevenson.util.getParameter('new') == 'true') {
-						window.location.replace('/cms/edit.html#'+currentPage.path);
+						window.location.replace('{{ site.baseurl }}/cms/edit.html#'+currentPage.path);
 					} else {
 						$('#message').val('');
 						initialize();
