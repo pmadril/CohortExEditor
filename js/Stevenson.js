@@ -94,7 +94,7 @@ var Stevenson ={
 					Stevenson.log.debug("Adding logged in top section");
 					$.Mustache.load('{{ site.baseurl }}/templates/authentication.html').done(function () {
 						$('#top-login').html('');
-						$('#top-login').mustache('top-bar', {name: Stevenson.Account.name});
+						$('#top-login').mustache('top-bar', {name: Stevenson.Account.name, siteBaseURLTemplate: '{{ site.baseurl }}'});
 					});
 				}
 				Stevenson.log.debug("Calling after Init methods");
