@@ -5,26 +5,28 @@
 		<title>{% if page.title %} {{ page.title }} | {% endif %} {{site.name}} - {{site.description}}</title>
 		<meta name="description" content="{{page.description}}" />
 		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-		<link rel="shortcut icon" href="{{ site.baseurl }}/images/logo-small.png" />
-		<link rel="stylesheet" href="{{ site.baseurl }}/css/bootstrap.min.css" />
-		<link rel="stylesheet" href="{{ site.baseurl }}/css/bootstrap-responsive.min.css" />
-		<link rel="stylesheet" href="{{ site.baseurl }}/css/dataTables.bootstrap.css" />
+		<link rel="shortcut icon" href="{{ site.baseurl }}/stevImg/logo-smallCohortEx.png" />
+		<link rel="stylesheet" href="{{ site.baseurl }}/css/stevCss/bootstrap.min.css" />
+		<link rel="stylesheet" href="{{ site.baseurl }}/css/stevCss/bootstrap-responsive.min.css" />
+		<link rel="stylesheet" href="{{ site.baseurl }}/css/stevCss/dataTables.bootstrap.css" />
 		{% for style in page.styles %}<link rel="stylesheet" href="{{ site.baseurl }}{{ style }}" />{% endfor %} 
-		<link rel="stylesheet" href="{{ site.baseurl }}/css/app.css" />
+		<link rel="stylesheet" href="{{ site.baseurl }}/css/stevCss/app.css" />
 		<!-- HTML5 shim, for IE6-8 support of HTML5 elements -->
 		<!--[if lt IE 9]>
 			<script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
 		<![endif]-->
 		<script src="//ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
-		<script src="{{ site.baseurl }}/js/bootstrap.min.js"></script>
-		<script src="{{ site.baseurl }}/js/jquery.mustache.js"></script>
-		<script src="{{ site.baseurl }}/js/jquery.dataTables.js"></script>
-		<script src="{{ site.baseurl }}/js/dataTables.bootstrap.js"></script>
-		<script src="{{ site.baseurl }}/js/mustache.js"></script>
-		<script src="{{ site.baseurl }}/js/Base64.js"></script>
-		<script src="{{ site.baseurl }}/js/underscore.js"></script>
-		<script src="{{ site.baseurl }}/js/github-api.js"></script>
-		<script src="{{ site.baseurl }}/js/Stevenson.js"></script>
+        <!-- script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script -->
+        <!-- script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script -->
+        <script src="{{ site.baseurl }}/stevJs/bootstrap.min.js"></script>
+		<script src="{{ site.baseurl }}/stevJs/jquery.mustache.js"></script>
+		<script src="{{ site.baseurl }}/stevJs/jquery.dataTables.js"></script>
+		<script src="{{ site.baseurl }}/stevJs/dataTables.bootstrap.js"></script>
+		<script src="{{ site.baseurl }}/stevJs/mustache.js"></script>
+		<script src="{{ site.baseurl }}/stevJs/Base64.js"></script>
+		<script src="{{ site.baseurl }}/stevJs/underscore.js"></script>
+		<script src="{{ site.baseurl }}/stevJs/github-api.js"></script>
+		<script src="{{ site.baseurl }}/stevJs/Stevenson.js"></script>
 		{% for script in page.scripts %}<script src="{{ site.baseurl }}{{ script }}"></script>{% endfor %} 
 		<script>
 			Stevenson.loginRequired = {{page.authRequired}};
@@ -54,10 +56,10 @@
 			{{content}}
 			<hr/>
 			<footer>
-				<p>CohortEx Parameters Editor (&copy; Pablo J. Madril - 2017): Based on <a href="https://github.com/StevensonCMS/StevensonCMS.github.io">StevensonCMS</a> (&copy; Dan Klco - 2012) - both under Apache License 2.0</p>
+				<p>CohortEx Parameters Editor: Based on <a href="https://github.com/StevensonCMS/StevensonCMS.github.io">StevensonCMS</a> - Apache License 2.0</p>
 			</footer>
 		</div>
-		{% include login.html %}
-		{% include loader.html %}
+		{% include stevLogin.html %}
+		{% include stevLoader.html %}
 	</body>
 </html>

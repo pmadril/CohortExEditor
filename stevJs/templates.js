@@ -21,8 +21,8 @@
 								layout.id = id;
 								layout.templateurl  ='{{ site.baseurl }}/cms/edit.html?editor=text#' + Stevenson.Account.layoutsPath + id + '.html';
 								layout.editorurl = '{{ site.baseurl }}/cms/edit.html?new=true#' + Stevenson.Account.editorsPath + id + '.json'; //_editors/
-								for(var i=0;i<editors.length;i++){ //'_editors/'
-									if(editors[i].path == Stevenson.Account.editorsPath + +id+'.json'){
+								for(var i=0;i<editors.length;i++){
+									if(editors[i].path == Stevenson.Account.editorsPath + +id+'.json'){ //'_editors/'
 										layout.editorurl = '{{ site.baseurl }}/cms/edit.html#_editors/' + Stevenson.Account.editorsPath  + id + '.json'; //_editors/
 										break;
 									}

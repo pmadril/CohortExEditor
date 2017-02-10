@@ -1,6 +1,6 @@
 <div id="login-modal" class="modal hide fade">
 	<div class="modal-header">
-		<a href="{{ site.baseurl }}/" class="close">x</a>
+		<a href="#" class="close">x</a>
 		<h3>Authenticate with GitHub?</h3>
 	</div>
 	<div class="modal-body">
@@ -43,7 +43,7 @@
 				success: function(user){
 					$('#login input').removeAttr("disabled");
 					$('#login-modal').modal('hide');
-					window.location = '{{ site.baseurl }}/cms';
+					window.location = Stevenson.Account.siteBaseURL + '/cohortexCms';
 				}
 			});
 			return false;

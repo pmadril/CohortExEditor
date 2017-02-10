@@ -1,21 +1,22 @@
 ---
 ---
 (function($) {
-	var filterRepos = function(id){
-		var filter = $('#'+id+'-filter input').val().toLowerCase();
-		if(filter == '') {
-			$('.tab-pane#'+ id +' .repo').show();
+    "use strict";
+	var filterRepos = function (id) {
+		var filter = $('#' + id + '-filter input').val().toLowerCase();
+		if (filter === '') {
+			$('.tab-pane#' + id + ' .repo').show();
 		} else {
-			$('.tab-pane#'+ id +' .repo').each(function(idx,elem){
-				if($(elem).attr('id').toLowerCase().indexOf(filter) != -1) {
+			$('.tab-pane#' + id + ' .repo').each(function (idx, elem) {
+				if ($(elem).attr('id').toLowerCase().indexOf(filter) !== -1) {
 					$(elem).show();
 				} else {
 					$(elem).hide();
 				}
 			});
 		}
-	};
-	var selectBranch = function(){
+	},
+        selectBranch = function(){
 		Stevenson.Account.repo = $('#current-repo').html();
 		Stevenson.Account.branch = $('#branches').val();
 		Stevenson.Account.save();
@@ -28,9 +29,10 @@
 						+ err);
 			}
 		});
+            
 		return false;
-	};
-	var loadRepos = function(group){
+        },
+        loadRepos = function (group) {
 		Stevenson.ui.Loader.display('Loading repositories...', 100);
 		Stevenson.log.info('Loading repositories for '+group);
 		Stevenson.repo.getRepos({
@@ -40,6 +42,7 @@
 				if(group) {
 					container = $('.tab-content #'+group);
 				}
+
 				$.each(repos, function(index, repo) {
 					container.mustache('repo-item', repo);
 				});
@@ -83,18 +86,18 @@
 	Stevenson.ext.afterInit(function(){
 		Stevenson.ui.Loader.display('Loading organizations...', 100);
 		Stevenson.repo.getOrgs({
-			success: function(orgs){
-				$.each(orgs,function(idx, org){
+			success: function (orgs) {
+				$.each(orgs, function (idx, org) {
 					$('.nav-tabs').append('<li><a href="#' + org.login + '">' + org.login + '</a></li>');
-					$('.nav-tabs a[href=#'+org.login+']').click(function(){
-						if($('.tab-pane#'+org.login).html() == ''){
-							$('#'+org.login).mustache('org-header', org);
+					$('.nav-tabs a[href=#' + org.login + ']').click(function () {
+						if ($('.tab-pane#' + org.login).html() === '') {
+							$('#' + org.login).mustache('org-header', org);
 							loadRepos(org.login);
-							var filterRepo = function(){
+							var filterRepo = function () {
 								filterRepos(org.login);
 							};
-							$('#'+org.login+'-filter input').change(filterRepo).keyup(filterRepo).click(filterRepo).focusout(filterRepo);
-							$('#'+org.login+'-filter').submit(function(){
+							$('#' + org.login + '-filter input').change(filterRepo).keyup(filterRepo).click(filterRepo).focusout(filterRepo);
+							$('#' + org.login + '-filter').submit(function () {
 								return false;
 							});
 						}
@@ -116,15 +119,15 @@
 						+ message);
 			}
 		});
-		var user = Stevenson.session.get('user');
-		$('#user-avatar').attr('src',user['avatar_url']);
-		var filterRepo = function(){
-			filterRepos('mine');
-		};
+		var user = Stevenson.session.get('user'),
+            filterRepo = function () {
+                filterRepos('mine');
+            };
+		$('#user-avatar').attr('src', user.avatar_url);
 		$('#mine-filter input').change(filterRepo).keyup(filterRepo).click(filterRepo).focusout(filterRepo);
 		
 	});
-	$(document).ready(function(){
+	$(document).ready(function () {
 		$('#branch-modal .btn').click(selectBranch);
 	});
-})(jQuery);
+}(jQuery));

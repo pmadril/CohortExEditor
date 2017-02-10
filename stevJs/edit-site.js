@@ -20,11 +20,15 @@
 				$('.breadcrumb .path').html(path);
 				$('#files tbody').html('');
 				$.each(files, function(index, file){
-					if(file.path.indexOf('_config') != 0 && file.path.indexOf('_layouts') != 0 && file.path.indexOf('_editors') != 0){
+					if (file.path.indexOf('_config') != 0 && file.path.indexOf('_layouts') != 0 && file.path.indexOf('_editors') != 0){
 						file.size = file.size ? bytesToSize(file.size) : '';
 						$('#files tbody').mustache('file', file);
-					}
+						}
 				});
+				$('#files input[type=checkbox]').each(function(index, item){
+						$(item).removeAttr('checked');
+					});
+				
 				$('.folder-close').click(function(){
 					window.location.hash = $(this).attr('data-path');
 				});
@@ -46,6 +50,7 @@
 				});
 				$('#files').dataTable();
 				Stevenson.ui.Loader.hide();
+				
 			},
 			error: function(message){
 				Stevenson.ui.Loader.hide();
@@ -94,6 +99,9 @@
 				$('#new-file-modal .modal-body .alert-error').remove();
 				var name = $('#file-name').val();
 				if(name != ''){
+					//Change whitespaces in name with -
+					name = name.replace(/\s/g, "-");
+					
 					var path = $('#files').attr('data-path');
 					var filePath = path + "/" + name;
 					if(path == ""){
@@ -129,7 +137,12 @@
 		$('.file-edit').click(function(){
 			Stevenson.ui.Loader.display('Loading editor...', 100);
 			var path = $('#files input[type=checkbox]:checked').parents('tr').attr('data-path');
-			window.location = '{{ site.baseurl }}/cms/edit.html#' + path;
+			if (typeof path !== 'undefined' && path != '') {
+				window.location = '{{ site.baseurl }}/cms/edit.html#' + path;
+			} else {
+					Stevenson.ui.Messages.displayError("No file selected. Please, select a file to edit.");
+					Stevenson.ui.Loader.hide();
+			}
 			return false;
 		});
 		

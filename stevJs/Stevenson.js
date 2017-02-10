@@ -79,11 +79,11 @@ var Stevenson = {
 				Stevenson.log.error('Exception calling method ' + initMethod, e);
 			}
 		});
-		
+
 		Stevenson.log.debug("Loading the global CMS template");
-		$.Mustache.load('{{ site.baseurl }}/templates/cms.html').done(function(){		
+		$.Mustache.load('{{ site.baseurl }}/templates/stevCms.html').done(function(){		
 			Stevenson.log.info('Initializing application');
-	
+
 			// Pre-start checks
 			if (!localStorage) {
 				alert('Your browser is not supported!  Please use a supported browser.');
@@ -110,7 +110,7 @@ var Stevenson = {
 			}else{
 				if (Stevenson.Account.authenticated && Stevenson.Account.authenticated == true) {
 					Stevenson.log.debug("Adding logged in top section");
-					$.Mustache.load('{{ site.baseurl }}/templates/authentication.html').done(function () {
+					$.Mustache.load('{{ site.baseurl }}/templates/stevAuthentication.html').done(function () {
 						$('#top-login').html('');
 						$('#top-login').mustache('top-bar', {name: Stevenson.Account.name, siteBaseURL: '{{ site.baseurl }}'});
 					});
@@ -797,7 +797,7 @@ var Stevenson = {
 					}
 				}
 				
-				$.Mustache.load('{{ site.baseurl }}/templates/cms.html').done(function () {
+				$.Mustache.load('{{ site.baseurl }}/templates/stevCms.html').done(function () {
 					Stevenson.ui.ContentEditor.currentEditor.setContent(page);
 				});
 			},
@@ -912,7 +912,7 @@ var Stevenson = {
 						new EpicEditor({
 							textarea: 'content',
 							container: 'markdown-editor',
-							basePath: '{{ site.baseurl }}/js/epiceditor',
+							basePath: '{{ site.baseurl }}/stevJs/epiceditor',
 							autogrow: true
 						}).load();
 					},
