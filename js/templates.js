@@ -1,3 +1,5 @@
+---
+---
 (function($) {
 	var loadTemplates = function(path){
 		Stevenson.ui.Loader.display('Loading templates...', 100);
@@ -13,10 +15,11 @@
 								Stevenson.log.info('Adding layout: '+layout.path);
 								var id = layout.path.replace('.html','').replace('_layouts/','');
 								layout.id = id;
-								layout.editorurl = '/cms/edit.html?new=true#_editors/' + id + '.json';
+								layout.siteBaseURLTemplate ='{{ site.baseurl }}';
+								layout.editorurl = '{{ site.baseurl }}/cms/edit.html?new=true#_editors/' + id + '.json';
 								for(var i=0;i<editors.length;i++){
 									if(editors[i].path == '_editors/'+id+'.json'){
-										layout.editorurl = '/cms/edit.html#_editors/' + id + '.json';
+										layout.editorurl = '{{ site.baseurl }}/cms/edit.html#_editors/' + id + '.json';
 										break;
 									}
 								}
@@ -45,7 +48,7 @@
 			if(templateName.indexOf('.html') == -1){
 				templateName += '.html';
 			}
-			window.location = '/cms/edit.html?new=true#_layouts/'+templateName;
+			window.location = '{{ site.baseurl }}/cms/edit.html?new=true#_layouts/'+templateName;
 			return false;
 		});
 		$('.breadcrumb .repo').html(Stevenson.Account.repo);
