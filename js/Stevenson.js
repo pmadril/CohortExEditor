@@ -1,6 +1,6 @@
 ---
 ---
-var Stevenson ={
+var Stevenson = {
 	/**
 	 * Holds the current account information.  
 	 */
@@ -11,11 +11,22 @@ var Stevenson ={
 		name : '',
 		password : '',
 		repo : '',
+		subFolder: '/',
+		subFolderDetector: '_config.yml',
+		schemasFolder: 'schemas',
+		studiesFolder: 'studies',
+		layoutsFolder: '_layouts',
+		editorsFolder: '_editors',
+		templatesFolder: 'templates',
+		schemaExtension: '.jctx',
+		documentBaseURL: '{{ site.url}}',
+		siteBaseURL: '{{ site.baseurl }}',
+		forkRootName: 'CohortEx',
 		username : '',
 		/**
 		 * Clears the account information from the session and local storage
 		 */
-		clear : function() {
+		clear : function () {
 			Stevenson.Account.authenticated = false;
 			Stevenson.Account.branch = '';
 			Stevenson.Account.favoriteRepos = [];
@@ -28,9 +39,9 @@ var Stevenson ={
 		/**
 		 * Loads the account information from Local Storage
 		 */
-		load : function() {
+		load : function () {
 			var acct = Stevenson.session.get('Stevenson.repo.Account');
-			if(acct != null && acct.authenticated){
+			if (acct !== null && acct.authenticated) {
 				$.extend(Stevenson.Account, acct);
 			}
 		},
@@ -81,7 +92,14 @@ var Stevenson ={
 			// Start up the account
 			Stevenson.Account.load();
 			Stevenson.repo.layouts = Stevenson.session.get("Stevenson.repo.layouts");
-		
+			Stevenson.repo.schemas = Stevenson.session.get("Stevenson.repo.schemas");
+			
+			Stevenson.Account.layoutsPath = Stevenson.session.get("Stevenson.repo.layoutsPath");
+			Stevenson.Account.editorsPath = Stevenson.session.get("Stevenson.repo.editorsPath");
+			Stevenson.Account.schemasPath = Stevenson.session.get("Stevenson.repo.schemasPath");
+			Stevenson.Account.templatesPath = Stevenson.session.get("Stevenson.repo.templatesPath");
+			Stevenson.Account.subFolder   = Stevenson.session.get("Stevenson.repo.subFolder");
+
 			Stevenson.log.debug('Checking to see if need to login');
 			if (Stevenson.loginRequired && Stevenson.Account.authenticated == false) {
 				$('#login-modal').modal({
@@ -94,7 +112,7 @@ var Stevenson ={
 					Stevenson.log.debug("Adding logged in top section");
 					$.Mustache.load('{{ site.baseurl }}/templates/authentication.html').done(function () {
 						$('#top-login').html('');
-						$('#top-login').mustache('top-bar', {name: Stevenson.Account.name, siteBaseURLTemplate: '{{ site.baseurl }}'});
+						$('#top-login').mustache('top-bar', {name: Stevenson.Account.name, siteBaseURL: '{{ site.baseurl }}'});
 					});
 				}
 				Stevenson.log.debug("Calling after Init methods");
@@ -110,25 +128,25 @@ var Stevenson ={
 	},
 	log: {
 		debug : function() {
-			if (typeof console == 'undefined') {
+			if (typeof console === 'undefined') {
 				return;
 			}
 			console.debug.apply(console, arguments);
 		},
 		info : function() {
-			if (typeof console == 'undefined') {
+			if (typeof console === 'undefined') {
 				return;
 			}
 			console.info.apply(console, arguments);
 		},
 		warn : function() {
-			if (typeof console == 'undefined') {
+			if (typeof console === 'undefined') {
 				return;
 			}
 			console.warn.apply(console, arguments);
 		},
 		error : function() {
-			if (typeof console == 'undefined') {
+			if (typeof console === 'undefined') {
 				return;
 			}
 			console.error.apply(console, arguments);
@@ -139,6 +157,7 @@ var Stevenson ={
 	 */
 	repo: {
 		layouts: [],
+		schemas: [],
 		copyFile: function(options){
 			var settings = $.extend({}, {
 				success: function(file){},
@@ -164,7 +183,7 @@ var Stevenson ={
 				success: function(file){},
 				error: function(err){}
 				}, options);
-			
+
 			var gh = Stevenson.repo.getGitHub();
 			var repo = gh.getRepo(Stevenson.Account.repo.split('/')[0], Stevenson.Account.repo
 					.split('/')[1]);
@@ -181,7 +200,7 @@ var Stevenson ={
 				success: function(files){},
 				error: function(err){}
 				}, options);
-			
+
 			var gh = Stevenson.repo.getGitHub();
 			var repo = gh.getRepo(Stevenson.Account.repo.split('/')[0], Stevenson.Account.repo
 					.split('/')[1]);
@@ -202,7 +221,7 @@ var Stevenson ={
 				error: function(err){},
 				repoName: ''
 				}, options);
-			
+
 			Stevenson.log.debug('Loading branches for repository: '+settings.repoName);
 			var gh = Stevenson.repo.getGitHub();
 			var repo = gh.getRepo(settings.repoName.split('/')[0],
@@ -228,7 +247,7 @@ var Stevenson ={
 				success: function(file){},
 				error: function(err){}
 				}, options);
-			
+
 			var gh = Stevenson.repo.getGitHub();
 			var repo = gh.getRepo(Stevenson.Account.repo.split('/')[0], Stevenson.Account.repo
 					.split('/')[1]);
@@ -247,7 +266,7 @@ var Stevenson ={
 				success: function(files){},
 				error: function(err){}
 				}, options);
-			
+
 			var gh = Stevenson.repo.getGitHub();
 			var repo = gh.getRepo(Stevenson.Account.repo.split('/')[0], Stevenson.Account.repo
 					.split('/')[1]);
@@ -274,7 +293,7 @@ var Stevenson ={
 				success: function(files){},
 				error: function(err){}
 				}, options);
-			
+
 			var gh = Stevenson.repo.getGitHub();
 			var repo = gh.getRepo(Stevenson.Account.repo.split('/')[0], Stevenson.Account.repo
 					.split('/')[1]);
@@ -297,7 +316,7 @@ var Stevenson ={
 								Stevenson.log.debug("Adding file: " + rf.path);
 								file.name = name;
 								file.path = rf.path;
-								
+
 								if(file.name == '') {
 									file.name = '..';
 									file.type = 'folder-close';
@@ -330,12 +349,112 @@ var Stevenson ={
 				auth : "basic"
 			});
 		},
+
+		getLayoutsAndSchemas: function(options) {
+			var settings = $.extend({}, {
+				success: function(files){},
+				error: function(err){}
+				}, options);
+
+			var gh = Stevenson.repo.getGitHub();
+			var repo = gh.getRepo(Stevenson.Account.repo.split('/')[0], Stevenson.Account.repo
+					.split('/')[1]);
+			repo.getTree(Stevenson.Account.branch + '?recursive=true', function(err, tree) {
+				if (err) {
+					settings.error(Stevenson.repo.getErrorMessage(err));
+				} else {
+					Stevenson.log.debug("Trying to load layouts");
+					var layouts = [];
+					var schemas = [];
+					
+					//Not really necessary
+					Stevenson.Account.subFolder = '';
+					Stevenson.Account.layoutsPath= '';
+					Stevenson.Account.schemasPath = '';
+					Stevenson.Account.editorsPath = '';
+					Stevenson.Account.templatesPath = '';
+					Stevenson.Account.studiesPath = '';
+					
+					for(var i=0; i < tree.length; i++) {
+						var rf = tree[i];
+						
+						var posPathLayouts = rf.path.indexOf(Stevenson.Account.layoutsFolder);
+						var posPathEditors = rf.path.indexOf(Stevenson.Account.editorsFolder);
+						var posPathSchemas = rf.path.indexOf(Stevenson.Account.schemasFolder);
+						var posPathTemplates = rf.path.indexOf(Stevenson.Account.templatesFolder);
+						var posPathSubFolder = rf.path.indexOf(Stevenson.Account.subFolderDetector);
+						var posPathStudies = rf.path.indexOf(Stevenson.Account.studiesFolder);
+						
+						//Detect docs
+						if(posPathSubFolder >= 0) {
+							Stevenson.Account.subFolder = rf.path.substring(0,posPathSubFolder);
+							Stevenson.log.info("Define subFolder as: " + Stevenson.Account.subFolder);								
+						}
+						
+						if( posPathLayouts >= 0) {
+							var nameLayout = rf.path.substr(posPathLayouts + Stevenson.Account.layoutsFolder.length + 1);
+							nameLayout = nameLayout.substring(0, nameLayout.indexOf('.'));
+							layouts.push(nameLayout);
+							if (nameLayout.length == 0){
+								Stevenson.Account.layoutsPath = rf.path +  '/' ;
+								Stevenson.log.info("Define layoutsPath as: " + Stevenson.Account.layoutsPath);								
+							}
+						} else {
+							if ( posPathSchemas >= 0) {
+								var nameSchema = rf.path.substr(posPathSchemas + Stevenson.Account.schemasFolder.length + 1);
+								nameSchema = nameSchema.substring(0, nameSchema.lastIndexOf('.'));
+								schemas.push(nameSchema);
+								if (nameSchema.length == 0){
+									Stevenson.Account.schemasPath = rf.path +  '/' ;
+									Stevenson.log.info("Define schemasPath as: " + Stevenson.Account.schemasPath);								
+								}
+							} else {
+								if ( posPathEditors >= 0) {
+									var nameEditor = rf.path.substr(posPathEditors + Stevenson.Account.editorsFolder.length + 1);
+									nameEditor = nameEditor.substring(0, nameEditor.lastIndexOf('.'));
+									if (nameEditor.length == 0){
+										Stevenson.Account.editorsPath = rf.path +  '/' ;
+										Stevenson.log.info("Define editorsPath as: " + Stevenson.Account.editorsPath);								
+									}
+								} else {
+									if (posPathTemplates >= 0 && rf.path == Stevenson.Account.subFolder + Stevenson.Account.templatesFolder) {
+										Stevenson.Account.templatesPath = rf.path + '/';
+										Stevenson.log.info("Define templatesPath as: " + Stevenson.Account.templatesPath);								
+									} else {
+										if (posPathStudies >= 0 && posPathStudies + Stevenson.Account.studiesFolder.length == rf.path.length) {
+											Stevenson.Account.studiesPath = rf.path;
+											Stevenson.log.info("Define studiesPath as: " + Stevenson.Account.studiesPath);
+										} else {
+											//Stevenson.log.debug("Skipping file: " + rf.path);								
+										}
+									}
+								}
+							}
+						};
+					}
+					Stevenson.repo.layouts = layouts;
+					Stevenson.session.set("Stevenson.repo.layouts", layouts);
+					Stevenson.session.set("Stevenson.repo.layoutsPath", Stevenson.Account.layoutsPath);
+					
+					Stevenson.session.set("Stevenson.repo.editorsPath", Stevenson.Account.editorsPath);
+					Stevenson.session.set("Stevenson.repo.templatesPath", Stevenson.Account.templatesPath);
+					Stevenson.session.set("Stevenson.repo.subFolder", Stevenson.Account.subFolder);
+
+					Stevenson.repo.schemas = schemas;
+					Stevenson.session.set("Stevenson.repo.schemas", schemas);
+					Stevenson.session.set("Stevenson.repo.schemasPath", Stevenson.Account.schemasPath);
+					
+					settings.success(layouts);
+				};
+			});
+		},
+		
 		getLayouts: function(options) {
 			var settings = $.extend({}, {
 				success: function(files){},
 				error: function(err){}
 				}, options);
-			
+
 			var gh = Stevenson.repo.getGitHub();
 			var repo = gh.getRepo(Stevenson.Account.repo.split('/')[0], Stevenson.Account.repo
 					.split('/')[1]);
@@ -348,8 +467,9 @@ var Stevenson ={
 					for(var i=0; i < tree.length; i++) {
 						var path = "_layouts";
 						var rf = tree[i];
-						if(rf.path.indexOf(path) == 0) {
-							var name = rf.path.substr(path.length + 1);
+						var posPath = rf.path.indexOf(path);
+						if( posPath >= 0) {
+							var name = rf.path.substr(posPath + path.length + 1);
 							name = name.substring(0, name.indexOf('.'));
 							layouts.push(name);
 						} else {
@@ -362,35 +482,86 @@ var Stevenson ={
 				};
 			});
 		},
+
+		getSchemas: function(options) {
+			var settings = $.extend({}, {
+				success: function(files){},
+				error: function(err){}
+				}, options);
+
+			var gh = Stevenson.repo.getGitHub();
+			var repo = gh.getRepo(Stevenson.Account.repo.split('/')[0], Stevenson.Account.repo
+					.split('/')[1]);
+			repo.getTree(Stevenson.Account.branch + '?recursive=true', function(err, tree) {
+				if (err) {
+					settings.error(Stevenson.repo.getErrorMessage(err));
+				} else {
+					Stevenson.log.debug("Trying to load schemas");
+					var schemas = [];
+					for(var i=0; i < tree.length; i++) {
+						var path = "_schemas";
+						var rf = tree[i];
+						if(rf.path.indexOf(path) == 0) {
+							var name = rf.path.substr(path.length + 1);
+							name = name.substring(0, name.lastIndexOf('.'));
+							schemas.push(name);
+						} else {
+							Stevenson.log.debug("Skipping file: " + rf.path);
+						};
+					}
+					Stevenson.repo.schemas = schemas;
+					Stevenson.session.set("Stevenson.repo.schemas", schemas);
+					settings.success(schemas);
+				};
+			});
+		},
 		getEditorConfig: function(options){
 			var settings = $.extend({}, {
 				success: function(repo){},
 				error: function(err){}
 			}, options);
-			Stevenson.repo.getFile({
-				path: '_editors/'+settings.layout+'.json',
-				success: function(file){
-					settings.success(JSON.parse(file.getPageContent()));
-				},
-				error:  function(message){
-					Stevenson.repo.getFile({
-						path:'_layouts/'+settings.layout+'.html',
-						success: function(file){
-							var properties = file.getProperties();
-							if(properties && properties.layout){
-								Stevenson.repo.getEditorConfig({
-									success: settings.success,
-									error: settings.error,
-									layout: properties.layout
-								});
-							}else{
-								settings.error('not configured');
-							}
-						},
-						error:settings.error
-					});
-				}
-			});
+            if (settings.layout && settings.layout !== null) {
+                Stevenson.repo.getFile({
+                    path: Stevenson.Account.editorsPath  +  settings.layout + '.json',
+                    success: function(file){
+						//Here stops the recursion. Any file can have nested layouts but only one 'must have' json file
+                        settings.success(JSON.parse(file.getPageContent()));
+						
+						//CohortExDev: Now check if there is a schema to read
+						if (settings.schema && settings.schema !== null) {
+							Stevenson.repo.getFile({
+								path: Stevenson.Account.schemasPath + settings.schema + '.json',
+								success: function(file){
+									settings.configSchema(JSON.parse(file.getPageContent()));
+								},
+								error:  function(message){
+									settings.error('Schema: ' + Stevenson.Account.schemasPath + settings.schema + '.json ' + message);
+								}
+							});
+						}
+                    },
+                    error:  function(message){
+						//Try to read a settings.layout + '.html' file
+                        Stevenson.repo.getFile({
+                            path:Stevenson.Account.layoutsPath +  settings.layout + '.html',
+                            success: function(file){
+                                var properties = file.getProperties();
+                                if(properties && properties.layout){
+									//Ok, file read. Now recurse over it until find a json
+                                    Stevenson.repo.getEditorConfig({
+                                        success: settings.success,
+                                        error: settings.error,
+                                        layout: properties.layout
+                                    });
+                                }else{
+                                    settings.error('not configured');
+                                }
+                            },
+                            error:settings.error
+                        });
+                    }
+                });
+            }
 		},
 		getHistory: function(options) {
 			var settings = $.extend({}, {
@@ -405,6 +576,21 @@ var Stevenson ={
 					settings.error(Stevenson.repo.getErrorMessage(err));
 				} else {
 					settings.success(orgs);
+				}
+			});
+		},
+		getEmails: function(options) {
+			var settings = $.extend({}, {
+				success: function(repo){},
+				error: function(err){}
+			}, options);
+			var gh = Stevenson.repo.getGitHub(options);
+			var user = gh.getUser();
+			user.emails(function(err, emails) {
+				if (err) {
+					settings.error(Stevenson.repo.getErrorMessage(err));
+				} else {
+					settings.success(emails);
 				}
 			});
 		},
@@ -428,7 +614,7 @@ var Stevenson ={
 				success: function(repo){},
 				error: function(err){}
 			}, options);
-			
+
 			var gh = Stevenson.repo.getGitHub(options);
 			try{
 				var repo = gh.getRepo(options.name.split('/')[0], options.name.split('/')[1]);
@@ -655,7 +841,7 @@ var Stevenson ={
 								tinymce.init(rteConfig);
 							}
 						});
-						
+
 					},
 					setContent: function(page){
 						$('.content').mustache('page-content-textarea', {content: page.getPageContent()});
@@ -666,7 +852,7 @@ var Stevenson ={
 				},
 				{
 					name: 'text',
-					regex: '^.+\.(json|yaml|css|js|txt|gitignore|xml|php|rb)$',
+					regex: '^.+\.(json|yaml|yml|css|js|txt|gitignore|xml|php|rb)$',
 					configure: function(config){
 					},
 					setContent: function(page){
@@ -676,6 +862,46 @@ var Stevenson ={
 						return $('#content').val();
 					}
 				},
+                {
+                    name: 'json',
+                    regex: '^.+\.(json|jctx)$',
+                    configure: function (config){
+						if (typeof config.$schema !== 'undefined') {
+							var jsonEditOptions = {
+							ajax: true,
+							disable_array_add: false,
+							disable_array_delete: false,
+							disable_array_reorder: true,
+							disable_collapse: false,
+							disable_edit_json: true,
+							disable_properties: true,
+							form_name_root: "cohortex",
+							iconlib: "bootstrap2",
+							no_additional_properties: true,
+							refs: {},
+							required_by_default: true,
+							keep_oneof_values: true,
+							schema: config,
+
+							show_errors: "interaction",
+							startval: null,
+							template: 'default',
+							theme: 'bootstrap2',
+							display_required_only: false
+							};
+							Stevenson.ui.ContentEditor.currentEditor.jsonEditor = new JSONEditor($('div#json-editor')[0],jsonEditOptions);
+							Stevenson.ui.ContentEditor.currentEditor.jsonEditor.setValue(JSON.parse(Stevenson.ui.ContentEditor.currentEditor.editorContent)); 
+						}
+                    },
+                    setContent: function(page){
+                        $('.content').mustache('page-content-json', {content: page.getPageContent()});
+                        Stevenson.ui.ContentEditor.currentEditor.editorContent = page.getPageContent();
+                    },
+                    getContent: function(){
+						Stevenson.ui.ContentEditor.currentEditor.editorContent = Stevenson.ui.ContentEditor.currentEditor.jsonEditor.getValue();
+                        return JSON.stringify(Stevenson.ui.ContentEditor.currentEditor.jsonEditor.getValue(), null, '\t');
+                    }
+                },
 				{
 					name: 'markdown',
 					regex: '^.+\.(md|markdown|mdtext)$',
@@ -692,7 +918,7 @@ var Stevenson ={
 					},
 					getContent: function(){
 						return $('#content').val();
-					}				
+					}
 				},
 				{
 					name: 'image',
@@ -747,7 +973,7 @@ var Stevenson ={
 						return page.content;
 					}
 				}
-				
+
 			]
 		},
 		/**
