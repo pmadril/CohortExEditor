@@ -18,7 +18,7 @@
 		<script src="//ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
         <!-- script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script -->
         <!-- script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script -->
-        <script src="{{ site.baseurl }}/stevJs/bootstrap.min.js"></script>
+        	<script src="{{ site.baseurl }}/stevJs/bootstrap.min.js"></script>
 		<script src="{{ site.baseurl }}/stevJs/jquery.mustache.js"></script>
 		<script src="{{ site.baseurl }}/stevJs/jquery.dataTables.js"></script>
 		<script src="{{ site.baseurl }}/stevJs/dataTables.bootstrap.js"></script>
@@ -27,6 +27,21 @@
 		<script src="{{ site.baseurl }}/stevJs/underscore.js"></script>
 		<script src="{{ site.baseurl }}/stevJs/github-api.js"></script>
 		<script src="{{ site.baseurl }}/stevJs/Stevenson.js"></script>
+		<script src="//cdn.jsdelivr.net/webshim/1.14.5/polyfiller.js"></script>
+		<script>
+  		webshims.setOptions('waitReady', false);
+		webshims.setOptions('forms-ext', {types: 'date'});
+		webshims.polyfill('forms forms-ext');
+		$.webshims.formcfg = {
+		en: {
+		    dFormat: '-',
+		    dateSigns: '-',
+		    patterns: {
+			d: "yy-mm-dd"
+		    }
+		}
+		};
+		</script>
 		{% for script in page.scripts %}<script src="{{ site.baseurl }}{{ script }}"></script>{% endfor %} 
 		<script>
 			Stevenson.loginRequired = {{page.authRequired}};
